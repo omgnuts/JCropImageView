@@ -25,20 +25,20 @@ ext {
     // which is a bad idea imho. Also, from Components.java does not work for aars atm.
 
     // bare minimum params for uploading to bintray
-    bintray_repo = 'maven'
-    package_name = 'android-bintray-kit'
+    bintray_repo = 'public'
+    package_name = 'android-components'
     group_id = 'com.jattcode'
     artifact_id = project.name
-    artifact_version = '0.5'
+    artifact_version = '0.1'
     all_licenses = ["Apache-2.0"] // mandatory
-    git_url = 'https://github.com/jimcoven/android-bintray-kit.git'
-    site_url = 'https://github.com/jimcoven/android-bintray-kit'
+    git_url = 'https://github.com/jimcoven/android-XCropImageView.git'
+    site_url = 'https://github.com/jimcoven/android-XCropImageView'
 
     // pom.xml is required for users to download your aars using the command
     // ie. compile 'group_id:artifact_id:artifact_version'
     // eg. compile 'com.android.support:appcompat-v7:22.1.1'
     // params below are for defining the additional params for the pom.xml
-    pom_library_desc = 'Basic android library template for deploying AARs'
+    pom_library_desc = 'Android component that extends ImageView to support more cropping options'
     pom_license_name = 'The Apache Software License, Version 2.0'
     pom_license_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     pom_developer_id = 'jimcoven'

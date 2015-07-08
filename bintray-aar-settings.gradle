@@ -1,2 +1,0 @@
-include ':android-bintray-kit'
-project(':android-bintray-kit').projectDir = new File('mod_library')
