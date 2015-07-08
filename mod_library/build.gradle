@@ -1,0 +1,90 @@
+apply plugin: 'com.android.library'
+
+/*
+ Project parameters are written in underscore_case to maintain readability from script codes.
+ */
+
+ext {
+    // Bintray credentials
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('bintray.auth').newDataInputStream())
+    bintray_userid = properties.getProperty("bintray.userid")
+    bintray_apikey = properties.getProperty("bintray.apikey")
+    bintray_gpgkey = properties.getProperty("bintray.gpgkey")
+
+    // Note: The artifact-id variable is included just to be explicit about the
+    // source of how your library is generated. If you want your library to be
+    // published as 'myawesomelib.aar' instead of 'library.aar', then do the following:
+    //
+    // Go to 'publish-settings.gradle' in the project root, and change the artifact-id
+    // in the project alias eg. :library to :helloawesomeworld
+    //
+    // While project.archivesBaseName works for sources, jars and the aar
+    // it doesn't apply the artifact-id properly for the pom file.
+    // The alternative is maven-publish, but that doesn't publish dependencies,
+    // which is a bad idea imho. Also, from Components.java does not work for aars atm.
+
+    // bare minimum params for uploading to bintray
+    bintray_repo = 'maven'
+    package_name = 'android-bintray-kit'
+    group_id = 'com.jattcode'
+    artifact_id = project.name
+    artifact_version = '0.5'
+    all_licenses = ["Apache-2.0"] // mandatory
+    git_url = 'https://github.com/jimcoven/android-bintray-kit.git'
+    site_url = 'https://github.com/jimcoven/android-bintray-kit'
+
+    // pom.xml is required for users to download your aars using the command
+    // ie. compile 'group_id:artifact_id:artifact_version'
+    // eg. compile 'com.android.support:appcompat-v7:22.1.1'
+    // params below are for defining the additional params for the pom.xml
+    pom_library_desc = 'Basic android library template for deploying AARs'
+    pom_license_name = 'The Apache Software License, Version 2.0'
+    pom_license_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    pom_developer_id = 'jimcoven'
+    pom_developer_name = 'Jim Coven'
+    pom_developer_email = 'jattcode@gmail.com'
+
+    // params for the android build
+    android_version_code = 1
+    android_version = artifact_version // reuse
+    android_build_sdk_version = ANDROID_BUILD_SDK_VERSION as int
+    android_build_tools_version = ANDROID_BUILD_TOOLS_VERSION
+    android_build_minsdk_version = ANDROID_BUILD_MIN_SDK_VERSION
+    android_build_targetsdk_version = ANDROID_BUILD_TARGET_SDK_VERSION as int
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+}
+
+/* .............................................................
+ * Modify the following if needed.
+  ............................................................. */
+
+group = group_id
+version = artifact_version
+project.archivesBaseName = artifact_id
+
+android {
+    compileSdkVersion android_build_sdk_version as int
+    buildToolsVersion android_build_tools_version as String
+
+    defaultConfig {
+        minSdkVersion android_build_minsdk_version as int
+        targetSdkVersion android_build_targetsdk_version as int
+        versionCode android_version_code as int
+        versionName android_version as String
+        // android library does NOT need an app_id
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false // keep as false. No need proguard for OSS
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+apply from: 'https://raw.githubusercontent.com/jimcoven/android-bintray-kit/0.5/bintray-aar-publish.gradle'

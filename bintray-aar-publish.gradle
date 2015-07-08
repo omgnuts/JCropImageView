@@ -1,0 +1,115 @@
+if (!project.hasProperty('publish_mode')) return;
+
+group = group_id
+version = artifact_version
+project.archivesBaseName = artifact_id
+
+/* .............................................................
+ * Generate secondary artifacts for publishing
+  ............................................................. */
+
+task androidSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task androidJavadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
+    from androidJavadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+androidJavadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title artifact_id
+    }
+}
+
+artifacts {
+    archives androidJavadocJar
+    archives androidSourcesJar
+}
+
+/* .............................................................
+ * Generate the project POM.xml & upload
+  ............................................................. */
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId group_id
+                artifactId artifact_id
+
+                // Add your description here
+                name package_name
+                description pom_library_desc
+                url site_url
+
+                // Set your license
+                licenses {
+                    license {
+                        name pom_license_name
+                        url pom_license_url
+                    }
+                }
+                developers {
+                    developer {
+                        id pom_developer_id
+                        name pom_developer_name
+                        email pom_developer_email
+                    }
+                }
+                scm {
+                    connection git_url
+                    developerConnection git_url
+                    url site_url
+                }
+            }
+        }
+    }
+}
+
+/* .............................................................
+ * Publish to bintray
+  ............................................................. */
+
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    user = bintray_userid
+    key = bintray_apikey
+
+    configurations = ['archives']
+
+    pkg {
+        repo = bintray_repo
+        name = package_name
+        websiteUrl = site_url
+        vcsUrl = git_url
+        licenses = all_licenses
+        dryRun = (project.publish_mode == 'debug')
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = bintray_gpgkey
+                //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
+}

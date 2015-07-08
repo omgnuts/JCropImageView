@@ -1,0 +1,7 @@
+# ....................................................
+# Specify your BINTRAY LOGIN / API / GPG information
+# ....................................................
+
+bintray.userid=USERNAME
+bintray.apikey=3ff1d537280570753817e42f3e45693816592b41
+bintray.gpgkey=PASSWORD
