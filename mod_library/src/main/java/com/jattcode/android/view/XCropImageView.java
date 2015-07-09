@@ -7,9 +7,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.jattcode.android.R;
@@ -26,9 +23,12 @@ public class XCropImageView extends ImageView {
         public static final int FITWITDH_STARTCROP = 0;
         public static final int FITWIDTH_CENTERCROP = 1;
         public static final int FITWIDTH_ENDCROP = 2;
-        public static final int FITHEIGHT_STARTCROP = 3;
-        public static final int FITHEIGHT_CENTERCROP = 4;
-        public static final int FITHEIGHT_ENDCROP = 5;
+        public static final int FITBEST_STARTCROP = 3;
+        public static final int FITBEST_CENTERCROP = 4; // same as android centercrop
+        public static final int FITBEST_ENDCROP = 5;
+        public static final int FITHEIGHT_STARTCROP = 6;
+        public static final int FITHEIGHT_CENTERCROP = 7;
+        public static final int FITHEIGHT_ENDCROP = 8;
     }
 
     private int mScaleCropType = -1;
@@ -84,9 +84,13 @@ public class XCropImageView extends ImageView {
             final int dh = d.getIntrinsicHeight();
             int dx = 0, dy = 0;
             int msWidth = 0, msHeight = 0;
-            final float scale;
+            int theoryw = 0, theoryh = 0;
+            float scalew = 0, scaleh = 0;
+            float scale = 0;
 
-            if (mScaleCropType < 3) { // fix width
+            int scaleCropType = mScaleCropType;
+
+            if (scaleCropType < 6) { // fit width || bestfit
                 // 1. get anchor by width. constrain to drawablewidth if wrap-content
                 msWidth = MeasureSpec.getSize(widthMeasureSpec); // the view width
                 if (getLayoutParams().width == -2) { // wrap
@@ -94,8 +98,33 @@ public class XCropImageView extends ImageView {
                 }
 
                 // 2. compute scale and theoretical height
-                scale = (float) msWidth / dw; // scale_via_width
-                final int h = (int) (dh * scale); // theoretical = height x scale_via_width
+                scale = scalew = (float) msWidth / dw; // scale_via_width
+                theoryh = (int) (dh * scalew); // theoretical = height x scale_via_width
+            }
+
+            if (scaleCropType > 2) {// fit height || bestfit
+                // 1. get anchor by height. constrain to drawableheight if wrap-content
+                msHeight = MeasureSpec.getSize(heightMeasureSpec); // the view height
+                if (getLayoutParams().height == -2) { // wrap
+                    msHeight = dh < msHeight ? dh : msHeight;
+                }
+
+                // 2. compute scale and theoretical width
+                scale = scaleh = (float) msHeight / dh; // scale_via_height
+                theoryw = (int) (dw * scaleh); // theoretical = width x scale_via_height
+            }
+
+            if (scaleCropType > 2 && scaleCropType < 6) { // fitbest - decide which to go
+                if (scalew > scaleh) { // lets fitwidth
+                    scaleCropType -= 3;
+                    scale = scalew;
+                } else {
+                    scaleCropType += 3;
+                    scale = scaleh;
+                }
+            }
+
+            if (scaleCropType < 3) { // fix width
 
                 // 3. constrain by maxheight
                 // if match_parent then additional constraint if viewport < maxheight
@@ -106,27 +135,18 @@ public class XCropImageView extends ImageView {
                     if (msHeight == -1) msHeight = MeasureSpec.getSize(heightMeasureSpec);
                     maxHeight = msHeight < maxHeight ? msHeight : maxHeight;
                 }
-                msHeight = h > maxHeight ? maxHeight : h; // limited height
+                msHeight = theoryh > maxHeight ? maxHeight : theoryh; // limited height
 
                 // 4. translate
-                if (mScaleCropType == ScaleCropType.FITWIDTH_CENTERCROP) {
+                if (scaleCropType == ScaleCropType.FITWIDTH_CENTERCROP) {
                     // if you want center crop shift it up by 50% aka 0.5f
-                    dy = (int)( (msHeight - h) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mScaleCropType == ScaleCropType.FITWIDTH_ENDCROP) {
+                    dy = (int)( (msHeight - theoryh) * 0.5f + 0.5f ); // + 0.5f for rounding
+                } else if (scaleCropType == ScaleCropType.FITWIDTH_ENDCROP) {
                     // if you want bottom crop shift it up by 100% aka 1.0f
-                    dy = (int)( (msHeight - h) * 1.0f + 0.5f ); // + 0.5f for rounding
+                    dy = (int)( (msHeight - theoryh) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
 
             } else {
-                // 1. get anchor by height. constrain to drawableheight if wrap-content
-                msHeight = MeasureSpec.getSize(heightMeasureSpec); // the view height
-                if (getLayoutParams().height == -2) { // wrap
-                    msHeight = dh < msHeight ? dh : msHeight;
-                }
-
-                // 2. compute scale and theoretical width
-                scale = (float) msHeight / dh; // scale_via_height
-                final int w = (int) (dw * scale); // theoretical = width x scale_via_height
 
                 // 3. constrain by maxwidth
                 // if match_parent then additional constraint if viewport < maxwidth
@@ -137,16 +157,18 @@ public class XCropImageView extends ImageView {
                     if (msWidth == -1) msWidth = MeasureSpec.getSize(widthMeasureSpec);
                     maxWidth = msWidth < maxWidth ? msWidth : maxWidth;
                 }
-                msWidth = w > maxWidth ? maxWidth : w; // limited width
+                msWidth = theoryw > maxWidth ? maxWidth : theoryw; // limited width
 
-                if (mScaleCropType == ScaleCropType.FITHEIGHT_CENTERCROP) {
+                if (scaleCropType == ScaleCropType.FITHEIGHT_CENTERCROP) {
                     // if you want center crop shift it left by 50% aka 0.5f
-                    dx = (int)( (msWidth - w) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mScaleCropType == ScaleCropType.FITHEIGHT_ENDCROP) {
+                    dx = (int)( (msWidth - theoryw) * 0.5f + 0.5f ); // + 0.5f for rounding
+                } else if (scaleCropType == ScaleCropType.FITHEIGHT_ENDCROP) {
                     // if you want bottom crop shift it up by 100% aka 1.0f
-                    dx = (int)( (msWidth - w) * 1.0f + 0.5f ); // + 0.5f for rounding
+                    dx = (int)( (msWidth - theoryw) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
             }
+
+
 
             // this is to scale it only by width
             // - the pivot point is at (0,0)

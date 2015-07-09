@@ -20,6 +20,12 @@
             <enum name="fitheight_centercrop" value="4" />
             <!-- Stretch to fit height and align at horizontal end -->
             <enum name="fitheight_endcrop" value="5" />
+            <!-- Stretch to fit height or width, whichever scales more and align at start -->
+            <enum name="fitbest_startcrop" value="3" />
+            <!-- Stretch to fit height or width, whichever scales more and align at center-->
+            <enum name="fitbest_centercrop" value="4" />
+            <!-- Stretch to fit height or width, whichever scales more and align at bottom -->
+            <enum name="fitbest_endcrop" value="5" />
 
         </attr>
 
