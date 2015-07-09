@@ -25,6 +25,7 @@ public class DataEngine {
         List<ImageItem> items = new ArrayList<ImageItem>();
 
         for (int c = 0; c < repeat; c++) {
+            items.add(new ImageItem("small", R.mipmap.ic_launcher));
             items.add(new ImageItem("horizontal", R.mipmap.vertical_image));
             items.add(new ImageItem("vertical", R.mipmap.horizontal_image));
             items.add(new ImageItem("square", R.mipmap.square_image));

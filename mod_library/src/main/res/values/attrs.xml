@@ -4,15 +4,25 @@
     <!-- XCropImageView attributes -->
     <declare-styleable name="XCropImageView">
 
-        <!-- Cropping method to apply when -->
-        <attr name="scaleCrop" format="reference" />
+        <!-- Defines the alignment of the text. A heuristic is used to determine the resolved
+            text alignment. -->
+        <attr name="scaleCropType" format="integer">
+            <!-- Default -->
+            <!-- Stretch to fit width and align at vertical start -->
+            <enum name="fitwidth_startcrop" value="0" />
+            <!-- Stretch to fit width and align at vertical center -->
+            <enum name="fitwidth_centercrop" value="1" />
+            <!-- Stretch to fit width and align at vertical end -->
+            <enum name="fitwidth_endcrop" value="2" />
+            <!-- Stretch to fit height and align at horizontal start -->
+            <enum name="fitheight_startcrop" value="3" />
+            <!-- Stretch to fit height and align at horizontal center -->
+            <enum name="fitheight_centercrop" value="4" />
+            <!-- Stretch to fit height and align at horizontal end -->
+            <enum name="fitheight_endcrop" value="5" />
 
-        <!--&lt;!&ndash; Whether or not this component is [...] by default (default: false) &ndash;&gt;-->
-        <!--<attr name="xbool" format="boolean" />-->
-        <!--&lt;!&ndash; Reference to apply when [...] &ndash;&gt;-->
-        <!--<attr name="xref" format="reference" />-->
-        <!--&lt;!&ndash; Set the [...] (default: 150ms) &ndash;&gt;-->
-        <!--<attr name="xint" format="integer" />-->
+        </attr>
+
 
     </declare-styleable>
 
