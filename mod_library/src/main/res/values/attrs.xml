@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- XCropImageView attributes -->
+    <declare-styleable name="XCropImageView">
+
+        <!-- Cropping method to apply when -->
+        <attr name="scaleCrop" format="reference" />
+
+        <!--&lt;!&ndash; Whether or not this component is [...] by default (default: false) &ndash;&gt;-->
+        <!--<attr name="xbool" format="boolean" />-->
+        <!--&lt;!&ndash; Reference to apply when [...] &ndash;&gt;-->
+        <!--<attr name="xref" format="reference" />-->
+        <!--&lt;!&ndash; Set the [...] (default: 150ms) &ndash;&gt;-->
+        <!--<attr name="xint" format="integer" />-->
+
+    </declare-styleable>
+
+</resources>
