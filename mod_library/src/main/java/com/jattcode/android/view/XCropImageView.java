@@ -17,21 +17,22 @@ import com.jattcode.android.R;
  */
 public class XCropImageView extends ImageView {
 
-    // Why not enums
-    // http://stackoverflow.com/questions/24491160/when-to-use-enum-int-constants
     public static final class ScaleCropType {
-        public static final int FITWITDH_STARTCROP = 0;
-        public static final int FITWIDTH_CENTERCROP = 1;
-        public static final int FITWIDTH_ENDCROP = 2;
-        public static final int FITBEST_STARTCROP = 3;
-        public static final int FITBEST_CENTERCROP = 4; // same as android centercrop
-        public static final int FITBEST_ENDCROP = 5;
-        public static final int FITHEIGHT_STARTCROP = 6;
-        public static final int FITHEIGHT_CENTERCROP = 7;
-        public static final int FITHEIGHT_ENDCROP = 8;
+        public static final int FIT_WIDTH = 0;
+        public static final int FIT_FILL = 1;
+        public static final int FIT_HEIGHT = 2;
+    }
+
+    public static final class AlignTo {
+        public static final int ALIGN_TOP = 0;
+        public static final int ALIGN_LEFT = 1;
+        public static final int ALIGN_BOTTOM = 2;
+        public static final int ALIGN_RIGHT = 3;
+        public static final int ALIGN_CENTER = 4;
     }
 
     private int mScaleCropType = -1;
+    private int mAlignment = 0;
 
     public XCropImageView(Context context) {
         super(context);
@@ -69,6 +70,7 @@ public class XCropImageView extends ImageView {
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.XCropImageView, defStyleAttr, defStyleRes);
         mScaleCropType = a.getInt(R.styleable.XCropImageView_scaleCropType, mScaleCropType);
+        mAlignment = a.getInt(R.styleable.XCropImageView_alignTo, mAlignment);
         a.recycle();
 
         if (mScaleCropType > -1) setScaleType(ScaleType.MATRIX);
@@ -90,7 +92,7 @@ public class XCropImageView extends ImageView {
 
             int scaleCropType = mScaleCropType;
 
-            if (scaleCropType < 6) { // fit width || bestfit
+            if (scaleCropType < 2) { // fit width || bestfit
                 // 1. get anchor by width. constrain to drawablewidth if wrap-content
                 msWidth = MeasureSpec.getSize(widthMeasureSpec); // the view width
                 if (getLayoutParams().width == -2) { // wrap
@@ -102,7 +104,7 @@ public class XCropImageView extends ImageView {
                 theoryh = (int) (dh * scalew); // theoretical = height x scale_via_width
             }
 
-            if (scaleCropType > 2) {// fit height || bestfit
+            if (scaleCropType > 0) {// fit bestfit || height
                 // 1. get anchor by height. constrain to drawableheight if wrap-content
                 msHeight = MeasureSpec.getSize(heightMeasureSpec); // the view height
                 if (getLayoutParams().height == -2) { // wrap
@@ -114,17 +116,17 @@ public class XCropImageView extends ImageView {
                 theoryw = (int) (dw * scaleh); // theoretical = width x scale_via_height
             }
 
-            if (scaleCropType > 2 && scaleCropType < 6) { // fitbest - decide which to go
+            if (scaleCropType == 1) { // fitbest - decide which to go
                 if (scalew > scaleh) { // lets fitwidth
-                    scaleCropType -= 3;
+                    scaleCropType--;
                     scale = scalew;
                 } else {
-                    scaleCropType += 3;
+                    scaleCropType++;
                     scale = scaleh;
                 }
             }
 
-            if (scaleCropType < 3) { // fix width
+            if (scaleCropType == 0) { // fit width
 
                 // 3. constrain by maxheight
                 // if match_parent then additional constraint if viewport < maxheight
@@ -138,15 +140,15 @@ public class XCropImageView extends ImageView {
                 msHeight = theoryh > maxHeight ? maxHeight : theoryh; // limited height
 
                 // 4. translate
-                if (scaleCropType == ScaleCropType.FITWIDTH_CENTERCROP) {
+                if (mAlignment == AlignTo.ALIGN_CENTER || mAlignment == AlignTo.ALIGN_LEFT || mAlignment == AlignTo.ALIGN_RIGHT) {
                     // if you want center crop shift it up by 50% aka 0.5f
                     dy = (int)( (msHeight - theoryh) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (scaleCropType == ScaleCropType.FITWIDTH_ENDCROP) {
+                } else if (mAlignment == AlignTo.ALIGN_BOTTOM) {
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dy = (int)( (msHeight - theoryh) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
 
-            } else {
+            } else { // fit height
 
                 // 3. constrain by maxwidth
                 // if match_parent then additional constraint if viewport < maxwidth
@@ -159,10 +161,10 @@ public class XCropImageView extends ImageView {
                 }
                 msWidth = theoryw > maxWidth ? maxWidth : theoryw; // limited width
 
-                if (scaleCropType == ScaleCropType.FITHEIGHT_CENTERCROP) {
+                if (mAlignment == AlignTo.ALIGN_CENTER || mAlignment == AlignTo.ALIGN_TOP || mAlignment == AlignTo.ALIGN_BOTTOM) {
                     // if you want center crop shift it left by 50% aka 0.5f
                     dx = (int)( (msWidth - theoryw) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (scaleCropType == ScaleCropType.FITHEIGHT_ENDCROP) {
+                } else if (mAlignment == AlignTo.ALIGN_RIGHT) {
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dx = (int)( (msWidth - theoryw) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }

@@ -8,27 +8,27 @@
             text alignment. -->
         <attr name="scaleCropType" format="integer">
             <!-- Default -->
-            <!-- Stretch to fit width and align at vertical start -->
-            <enum name="fitwidth_startcrop" value="0" />
-            <!-- Stretch to fit width and align at vertical center -->
-            <enum name="fitwidth_centercrop" value="1" />
-            <!-- Stretch to fit width and align at vertical end -->
-            <enum name="fitwidth_endcrop" value="2" />
-            <!-- Stretch to fit height and align at horizontal start -->
-            <enum name="fitheight_startcrop" value="3" />
-            <!-- Stretch to fit height and align at horizontal center -->
-            <enum name="fitheight_centercrop" value="4" />
-            <!-- Stretch to fit height and align at horizontal end -->
-            <enum name="fitheight_endcrop" value="5" />
-            <!-- Stretch to fit height or width, whichever scales more and align at start -->
-            <enum name="fitbest_startcrop" value="3" />
-            <!-- Stretch to fit height or width, whichever scales more and align at center-->
-            <enum name="fitbest_centercrop" value="4" />
-            <!-- Stretch to fit height or width, whichever scales more and align at bottom -->
-            <enum name="fitbest_endcrop" value="5" />
-
+            <!-- Stretch to fit width -->
+            <enum name="fit_width" value="0" />
+            <!-- Stretch to fit width or height to fill -->
+            <enum name="fit_fill" value="1" />
+            <!-- Stretch to fit height -->
+            <enum name="fit_height" value="2" />
         </attr>
 
+        <!-- Defines the alignment of the scaled image -->
+        <attr name="alignTo" format="integer">
+            <!-- Default -->
+            <enum name="top" value="0" />
+            <!-- Left edge -->
+            <enum name="left" value="1" />
+            <!-- Bottom edge -->
+            <enum name="bottom" value="2" />
+            <!-- Right edge -->
+            <enum name="right" value="3" />
+            <!-- Right edge -->
+            <enum name="center" value="4" />
+        </attr>
 
     </declare-styleable>
 
