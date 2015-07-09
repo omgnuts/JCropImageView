@@ -14,18 +14,18 @@ import com.jattcode.android.R;
 /**
  * XCropImageView provides 11 configurations
  *
- * FIT WIDTH - 3 configurations - TOP/BOTTOM/CENTER
- * FIT HEIGHT - 3 configurations - CENTER/LEFT/RIGHT
- * FIT BEST - 5 configurations - TOP/BOTTOM/CENTER/LEFT/RIGHT depending on which scale is used.
+ * FitWidth  - 3 configurations - TOP/BOTTOM/CENTER
+ * FitHeight - 3 configurations - CENTER/LEFT/RIGHT
+ * FitBest   - 5 configurations - TOP/BOTTOM/CENTER/LEFT/RIGHT depending on which scale is used.
  *
- * The configurations for FitWidth + Left/Right is correct, but it doesn't show any visual difference.
- * When an image is fit to width, the full width is already within the visible left and right bounds.
- * They are effectively ALWAYS aligned LEFT & RIGHT.
+ * The configurations for FitWidth + LEFT/RIGHT are correct, but they doesn't show any visual difference.
+ * This is because when an image is fit to width, the full width is already within the visible left and right bounds.
+ * They are effectively ALWAYS aligned LEFT and RIGHT.
  *
- * Similarly for FitHeight, it is effectively ALWAYS aligned TOP & BOTTOM
+ * Similarly for FitHeight, it is effectively ALWAYS aligned TOP and BOTTOM
  *
- * THe configurations are more visible with fit-best, which will decide which bound to fit to.
- * The default android scaleType=centerCrop is effectively 1 of the above configurations fit-best + center
+ * THe configurations are more visible with FitBest, which will decide which bound to fit to.
+ * The default android scaleType=centerCrop is effectively 1 of the above configurations FitBest + CENTER
  *
  */
 public class XCropImageView extends ImageView {

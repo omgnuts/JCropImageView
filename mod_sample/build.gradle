@@ -12,7 +12,7 @@ ext {
 
 // specific repos that are not in jcenter() or mavencentral() - both defined at root already
 repositories {
-    maven { url 'https://dl.bintray.com/jimcoven/maven/' }
+    maven { url 'https://dl.bintray.com/jimcoven/public/' }
 }
 
 dependencies {
@@ -20,8 +20,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:recyclerview-v7:22.2.0'
 
-    compile project(':android-xcropimageview')
-//    compile 'com.jattcode:android-xcropimageview:0.1'
+//    compile project(':android-xcropimageview')
+    compile 'com.jattcode:android-xcropimageview:0.1'
 }
 
 /* .............................................................
