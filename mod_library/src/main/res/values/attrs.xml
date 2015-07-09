@@ -20,14 +20,14 @@
         <attr name="alignTo" format="integer">
             <!-- Default -->
             <enum name="top" value="0" />
-            <!-- Left edge -->
-            <enum name="left" value="1" />
             <!-- Bottom edge -->
-            <enum name="bottom" value="2" />
+            <enum name="bottom" value="1" />
             <!-- Right edge -->
-            <enum name="right" value="3" />
+            <enum name="center" value="2" />
+            <!-- Left edge -->
+            <enum name="left" value="3" />
             <!-- Right edge -->
-            <enum name="center" value="4" />
+            <enum name="right" value="4" />
         </attr>
 
     </declare-styleable>

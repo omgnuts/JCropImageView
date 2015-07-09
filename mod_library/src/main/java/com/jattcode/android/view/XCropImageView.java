@@ -12,24 +12,38 @@ import android.widget.ImageView;
 import com.jattcode.android.R;
 
 /**
- * http://stackoverflow.com/questions/2991110/android-how-to-stretch-an-image-to-the-screen-width-while-maintaining-aspect-ra
- * http://www.ryadel.com/2015/02/21/android-proportionally-stretch-imageview-fit-whole-screen-width-maintaining-aspect-ratio/
+ * XCropImageView provides 11 configurations
+ *
+ * FIT WIDTH - 3 configurations - TOP/BOTTOM/CENTER
+ * FIT HEIGHT - 3 configurations - CENTER/LEFT/RIGHT
+ * FIT BEST - 5 configurations - TOP/BOTTOM/CENTER/LEFT/RIGHT depending on which scale is used.
+ *
+ * The configurations for FitWidth + Left/Right is correct, but it doesn't show any visual difference.
+ * When an image is fit to width, the full width is already within the visible left and right bounds.
+ * They are effectively ALWAYS aligned LEFT & RIGHT.
+ *
+ * Similarly for FitHeight, it is effectively ALWAYS aligned TOP & BOTTOM
+ *
+ * THe configurations are more visible with fit-best, which will decide which bound to fit to.
+ * The default android scaleType=centerCrop is effectively 1 of the above configurations fit-best + center
+ *
  */
 public class XCropImageView extends ImageView {
 
-    public static final class ScaleCropType {
-        public static final int FIT_WIDTH = 0;
-        public static final int FIT_FILL = 1;
-        public static final int FIT_HEIGHT = 2;
-    }
-
-    public static final class AlignTo {
-        public static final int ALIGN_TOP = 0;
-        public static final int ALIGN_LEFT = 1;
-        public static final int ALIGN_BOTTOM = 2;
-        public static final int ALIGN_RIGHT = 3;
-        public static final int ALIGN_CENTER = 4;
-    }
+    // Keep this here for reference
+//    public static final class ScaleCropType {
+//        public static final int FIT_WIDTH = 0;
+//        public static final int FIT_FILL = 1;
+//        public static final int FIT_HEIGHT = 2;
+//    }
+//
+//    public static final class AlignTo {
+//        public static final int ALIGN_TOP = 1;
+//        public static final int ALIGN_BOTTOM = 2;
+//        public static final int ALIGN_CENTER = 3;
+//        public static final int ALIGN_LEFT = 4;
+//        public static final int ALIGN_RIGHT = 5;
+//    }
 
     private int mScaleCropType = -1;
     private int mAlignment = 0;
@@ -90,9 +104,7 @@ public class XCropImageView extends ImageView {
             float scalew = 0, scaleh = 0;
             float scale = 0;
 
-            int scaleCropType = mScaleCropType;
-
-            if (scaleCropType < 2) { // fit width || bestfit
+            if (mScaleCropType < 2) { // fit width || bestfit
                 // 1. get anchor by width. constrain to drawablewidth if wrap-content
                 msWidth = MeasureSpec.getSize(widthMeasureSpec); // the view width
                 if (getLayoutParams().width == -2) { // wrap
@@ -100,11 +112,11 @@ public class XCropImageView extends ImageView {
                 }
 
                 // 2. compute scale and theoretical height
-                scale = scalew = (float) msWidth / dw; // scale_via_width
+                scalew = (float) msWidth / dw; // scale_via_width
                 theoryh = (int) (dh * scalew); // theoretical = height x scale_via_width
             }
 
-            if (scaleCropType > 0) {// fit bestfit || height
+            if (mScaleCropType > 0) {// fit bestfit || height
                 // 1. get anchor by height. constrain to drawableheight if wrap-content
                 msHeight = MeasureSpec.getSize(heightMeasureSpec); // the view height
                 if (getLayoutParams().height == -2) { // wrap
@@ -112,21 +124,12 @@ public class XCropImageView extends ImageView {
                 }
 
                 // 2. compute scale and theoretical width
-                scale = scaleh = (float) msHeight / dh; // scale_via_height
+                scaleh = (float) msHeight / dh; // scale_via_height
                 theoryw = (int) (dw * scaleh); // theoretical = width x scale_via_height
             }
 
-            if (scaleCropType == 1) { // fitbest - decide which to go
-                if (scalew > scaleh) { // lets fitwidth
-                    scaleCropType--;
-                    scale = scalew;
-                } else {
-                    scaleCropType++;
-                    scale = scaleh;
-                }
-            }
-
-            if (scaleCropType == 0) { // fit width
+            if (scalew > scaleh) { // fit width
+                scale = scalew;
 
                 // 3. constrain by maxheight
                 // if match_parent then additional constraint if viewport < maxheight
@@ -140,15 +143,17 @@ public class XCropImageView extends ImageView {
                 msHeight = theoryh > maxHeight ? maxHeight : theoryh; // limited height
 
                 // 4. translate
-                if (mAlignment == AlignTo.ALIGN_CENTER || mAlignment == AlignTo.ALIGN_LEFT || mAlignment == AlignTo.ALIGN_RIGHT) {
+
+                if (mAlignment > 2) { // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_LEFT || AlignTo.ALIGN_RIGHT
                     // if you want center crop shift it up by 50% aka 0.5f
                     dy = (int)( (msHeight - theoryh) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mAlignment == AlignTo.ALIGN_BOTTOM) {
+                } else if (mAlignment == 2) { // AlignTo.ALIGN_BOTTOM
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dy = (int)( (msHeight - theoryh) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
 
             } else { // fit height
+                scale = scaleh;
 
                 // 3. constrain by maxwidth
                 // if match_parent then additional constraint if viewport < maxwidth
@@ -161,16 +166,14 @@ public class XCropImageView extends ImageView {
                 }
                 msWidth = theoryw > maxWidth ? maxWidth : theoryw; // limited width
 
-                if (mAlignment == AlignTo.ALIGN_CENTER || mAlignment == AlignTo.ALIGN_TOP || mAlignment == AlignTo.ALIGN_BOTTOM) {
+                if (mAlignment < 4) { // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_TOP || AlignTo.ALIGN_BOTTOM
                     // if you want center crop shift it left by 50% aka 0.5f
                     dx = (int)( (msWidth - theoryw) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mAlignment == AlignTo.ALIGN_RIGHT) {
+                } else if (mAlignment == 5) { //AlignTo.ALIGN_RIGHT
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dx = (int)( (msWidth - theoryw) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
             }
-
-
 
             // this is to scale it only by width
             // - the pivot point is at (0,0)

@@ -9,11 +9,9 @@
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:scaleCropType="fit_fill"
+        app:scaleCropType="fit_width"
         app:alignTo="top"
     />
-    android:scaleType="centerCrop"
-
 
 </RelativeLayout>
 
