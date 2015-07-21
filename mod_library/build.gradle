@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 /*
  Project parameters are written in underscore_case to maintain readability from script codes.
@@ -7,32 +9,20 @@ apply plugin: 'com.android.library'
 ext {
     // Bintray credentials
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('bintray.auth').newDataInputStream())
-    bintray_userid = properties.getProperty("bintray.userid")
-    bintray_apikey = properties.getProperty("bintray.apikey")
-    bintray_gpgkey = properties.getProperty("bintray.gpgkey")
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-    // Note: The artifact-id variable is included just to be explicit about the
-    // source of how your library is generated. If you want your library to be
-    // published as 'myawesomelib.aar' instead of 'library.aar', then do the following:
-    //
-    // Go to 'publish-settings.gradle' in the project root, and change the artifact-id
-    // in the project alias eg. :library to :helloawesomeworld
-    //
-    // While project.archivesBaseName works for sources, jars and the aar
-    // it doesn't apply the artifact-id properly for the pom file.
-    // The alternative is maven-publish, but that doesn't publish dependencies,
-    // which is a bad idea imho. Also, from Components.java does not work for aars atm.
+    sonatype_userid = properties.getProperty("sonatype.userid")
+    sonatype_passwd = properties.getProperty("sonatype.passwd")
 
-    // bare minimum params for uploading to bintray
-    bintray_repo = 'public'
-    package_name = 'android-components'
+    // bare minimum params for uploading archive
+    package_name = 'Android Auori CropImageView'
     group_id = 'com.jattcode'
-    artifact_id = project.name
-    artifact_version = '0.1'
+    artifact_id = 'auori-cropimageview'
+    lib_version = '0.1-SNAPSHOT'
+    lib_version_code = 1
+    git_url = 'https://github.com/jimcoven/android-auori-cropimageview.git'
+    site_url = 'https://github.com/jimcoven/android-auori-cropimageview'
     all_licenses = ["Apache-2.0"] // mandatory
-    git_url = 'https://github.com/jimcoven/android-XCropImageView.git'
-    site_url = 'https://github.com/jimcoven/android-XCropImageView'
 
     // pom.xml is required for users to download your aars using the command
     // ie. compile 'group_id:artifact_id:artifact_version'
@@ -43,39 +33,28 @@ ext {
     pom_license_url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     pom_developer_id = 'jimcoven'
     pom_developer_name = 'Jim Coven'
-    pom_developer_email = 'jattcode@gmail.com'
+    pom_developer_email = ''
 
-    // params for the android build
-    android_version_code = 1
-    android_version = artifact_version // reuse
-    android_build_sdk_version = ANDROID_BUILD_SDK_VERSION as int
-    android_build_tools_version = ANDROID_BUILD_TOOLS_VERSION
-    android_build_minsdk_version = ANDROID_BUILD_MIN_SDK_VERSION
-    android_build_targetsdk_version = ANDROID_BUILD_TARGET_SDK_VERSION as int
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.2.0'
 }
 
 /* .............................................................
  * Modify the following if needed.
   ............................................................. */
 
-group = group_id
-version = artifact_version
-project.archivesBaseName = artifact_id
-
 android {
-    compileSdkVersion android_build_sdk_version as int
-    buildToolsVersion android_build_tools_version as String
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion android_build_minsdk_version as int
-        targetSdkVersion android_build_targetsdk_version as int
-        versionCode android_version_code as int
-        versionName android_version as String
+        minSdkVersion 15
+        targetSdkVersion 15
+        versionCode lib_version_code
+        versionName lib_version
         // android library does NOT need an app_id
     }
 
@@ -87,4 +66,4 @@ android {
     }
 }
 
-apply from: 'https://raw.githubusercontent.com/jimcoven/android-bintray-kit/0.5/bintray-aar-publish.gradle'
+apply from: '../aar-publish.gradle'

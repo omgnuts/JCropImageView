@@ -2,7 +2,7 @@
 <resources>
 
     <!-- XCropImageView attributes -->
-    <declare-styleable name="XCropImageView">
+    <declare-styleable name="AuoriCropImageView">
 
         <!-- Defines the alignment of the text. A heuristic is used to determine the resolved
             text alignment. -->

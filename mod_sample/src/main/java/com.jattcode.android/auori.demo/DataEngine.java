@@ -1,4 +1,4 @@
-package com.jattcode.android.demo;
+package com.jattcode.android.auori.demo;
 
 import java.util.ArrayList;
 import java.util.List;

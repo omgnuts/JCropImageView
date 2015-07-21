@@ -1,4 +1,4 @@
-package com.jattcode.android.demo;
+package com.jattcode.android.auori.demo;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jattcode.android.demo.DataEngine.ImageItem;
+import com.jattcode.android.auori.demo.DataEngine.ImageItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View view, ViewGroup parent) {
             ViewHolder holder;
             if (view == null) {
-                view = inflater.inflate(R.layout.xcrop_imageview, null);
+                view = inflater.inflate(R.layout.auori_cropimageview, null);
                 holder = new ViewHolder(view);
             } else {
                 holder = (ViewHolder) view.getTag();

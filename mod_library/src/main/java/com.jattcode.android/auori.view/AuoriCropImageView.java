@@ -1,4 +1,4 @@
-package com.jattcode.android.view;
+package com.jattcode.android.auori.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.jattcode.android.R;
+import com.jattcode.android.auori.R;
 
 /**
  * XCropImageView provides 11 configurations
@@ -28,7 +28,7 @@ import com.jattcode.android.R;
  * The default android scaleType=centerCrop is effectively 1 of the above configurations FitBest + CENTER
  *
  */
-public class XCropImageView extends ImageView {
+public class AuoriCropImageView extends ImageView {
 
     // Keep this here for reference
 //    public static final class ScaleCropType {
@@ -48,23 +48,23 @@ public class XCropImageView extends ImageView {
     private int mScaleCropType = -1;
     private int mAlignment = 0;
 
-    public XCropImageView(Context context) {
+    public AuoriCropImageView(Context context) {
         super(context);
         initFromAttributes(context, null, 0, 0);
     }
 
-    public XCropImageView(Context context, AttributeSet attrs) {
+    public AuoriCropImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initFromAttributes(context, attrs, 0, 0);
     }
 
-    public XCropImageView(Context context, AttributeSet attrs, int defStyle) {
+    public AuoriCropImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initFromAttributes(context, attrs, defStyle, 0);
     }
 
     /**
-     * INitialize the attributes for the XCropImageView
+     * Initialize the attributes for the AuoriImageView
      *
      * @param context The Context the view is running in, through which it can
      *        access the current theme, resources, etc.
@@ -82,9 +82,9 @@ public class XCropImageView extends ImageView {
                                int defStyleAttr, int defStyleRes) {
         // Read and apply provided attributes
         TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.XCropImageView, defStyleAttr, defStyleRes);
-        mScaleCropType = a.getInt(R.styleable.XCropImageView_scaleCropType, mScaleCropType);
-        mAlignment = a.getInt(R.styleable.XCropImageView_alignTo, mAlignment);
+                R.styleable.AuoriCropImageView, defStyleAttr, defStyleRes);
+        mScaleCropType = a.getInt(R.styleable.AuoriCropImageView_scaleCropType, mScaleCropType);
+        mAlignment = a.getInt(R.styleable.AuoriCropImageView_alignTo, mAlignment);
         a.recycle();
 
         if (mScaleCropType > -1) setScaleType(ScaleType.MATRIX);

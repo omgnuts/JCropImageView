@@ -1,0 +1,151 @@
+group = group_id
+version = lib_version
+project.archivesBaseName = artifact_id
+
+/* .............................................................
+ * Generate secondary artifacts for publishing
+  ............................................................. */
+
+task androidSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task androidJavadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
+    from androidJavadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+androidJavadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title artifact_id
+    }
+}
+
+artifacts {
+    archives androidJavadocJar
+    archives androidSourcesJar
+}
+
+/* .............................................................
+ * Generate the project POM.xml & upload
+  ............................................................. */
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId group_id
+                artifactId artifact_id
+
+                // Add your description here
+                name package_name
+                description pom_library_desc
+                url site_url
+
+                // Set your license
+                licenses {
+                    license {
+                        name pom_license_name
+                        url pom_license_url
+                    }
+                }
+                developers {
+                    developer {
+                        id pom_developer_id
+                        name pom_developer_name
+                        email pom_developer_email
+                    }
+                }
+                scm {
+                    connection git_url
+                    developerConnection git_url
+                    url site_url
+                }
+            }
+        }
+    }
+}
+
+/* .............................................................
+ * Upload to Sonatype / Bintray
+  ............................................................. */
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+signing {
+    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+afterEvaluate { project ->
+    uploadArchives {
+        configuration = configurations.archives
+        repositories.mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: sonatype_userid, password: sonatype_passwd)
+            }
+
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: sonatype_userid, password: sonatype_passwd)
+            }
+
+            pom.project {
+                name package_name
+                packaging 'aar'
+                description pom_library_desc
+                url site_url
+
+                scm {
+                    url site_url
+                    connection git_url
+                    developerConnection git_url
+                }
+
+                licenses {
+                    license {
+                        name pom_license_name
+                        url pom_license_url
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id pom_developer_id
+                        name pom_developer_name
+                        email pom_developer_email
+                    }
+                }
+            }
+        }
+    }
+}

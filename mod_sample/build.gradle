@@ -1,27 +1,18 @@
 apply plugin: 'com.android.application'
 
 ext {
-    app_id = 'com.jattcode.android.demo.XCropImageView' // usually the namespace. Note it is not the same as package
+    app_id = 'com.jattcode.android.auori.demo' // usually the namespace. Note it is not the same as package
     app_version_code = 1
-    app_version = '0.1x'
-    android_build_sdk_version = ANDROID_BUILD_SDK_VERSION as int
-    android_build_tools_version = ANDROID_BUILD_TOOLS_VERSION
-    android_build_minsdk_version = ANDROID_BUILD_MIN_SDK_VERSION
-    android_build_targetsdk_version = ANDROID_BUILD_TARGET_SDK_VERSION as int
-}
-
-// specific repos that are not in jcenter() or mavencentral() - both defined at root already
-repositories {
-    maven { url 'https://dl.bintray.com/jimcoven/public/' }
+    app_version = '0.1'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
 
-//    compile project(':android-xcropimageview')
-    compile 'com.jattcode:android-xcropimageview:0.1'
+//    compile project(':library')
+    compile 'com.jattcode:auori-cropimageview:0.1-SNAPSHOT'
 }
 
 /* .............................................................
@@ -29,12 +20,12 @@ dependencies {
   ............................................................. */
 
 android {
-    compileSdkVersion android_build_sdk_version as int
-    buildToolsVersion android_build_tools_version as String
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion android_build_minsdk_version as int
-        targetSdkVersion android_build_targetsdk_version as int
+        minSdkVersion 15
+        targetSdkVersion 15
         applicationId app_id as String
         versionCode app_version_code as int
         versionName app_version as String
