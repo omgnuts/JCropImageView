@@ -22,9 +22,12 @@ package com.jattcode.android.auori.demo;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,26 +81,26 @@ public class MultiViewActivity extends AppCompatActivity {
     static {
         configs = new ArrayList<>();
 
-        for (int type = 0; type < 3; type++) {
-            Configuration[] set = new Configuration[5];
-            for (int k = 0; k < 5; k++) {
-                set[k] = new Configuration(type, k+1);
+        for (int k = 0; k < 5; k++) {
+            Configuration[] set = new Configuration[3];
+            for (int type = 0; type < 3; type++) {
+                set[type] = new Configuration(type, k+1);
             }
             configs.add(set);
         }
 
-//        configs.get(0)[3] = null; // FIT_WIDTH + ALIGN_LEFT
-//        configs.get(0)[4] = null; // FIT_WIDTH + ALIGN_RIGHT
-//
-//        configs.get(2)[0] = null; // FIT_HEIGHT + ALIGN_TOP
-//        configs.get(2)[1] = null; // FIT_HEIGHT + ALIGN_BOTTOM
+        configs.get(3)[0] = null; // FIT_WIDTH + ALIGN_LEFT
+        configs.get(4)[0] = null; // FIT_WIDTH + ALIGN_RIGHT
+
+        configs.get(0)[2] = null; // FIT_HEIGHT + ALIGN_TOP
+        configs.get(1)[2] = null; // FIT_HEIGHT + ALIGN_BOTTOM
     }
 
     private static LinearLayout createLayout(Context context, LayoutParams lp, int orient) {
         LinearLayout layout = new LinearLayout(context);
         layout.setLayoutParams(lp);
         layout.setOrientation(orient);
-        layout.setBackgroundColor(Color.CYAN);
+//        layout.setBackgroundColor(Color.CYAN);
         return layout;
     }
 
@@ -107,14 +110,32 @@ public class MultiViewActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_multiview);
 
-        LinearLayout container = (LinearLayout) findViewById(R.id.container);
+        final LinearLayout container = (LinearLayout) findViewById(R.id.container);
         container.setOrientation(LinearLayout.VERTICAL);
-//        container.setWeightSum(configs.size());
 
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.weight = 1;
+        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-        List<ImageView> views = new ArrayList<>();
+        final List<ImageView> views = new ArrayList<>();
+        final View.OnClickListener clicker = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int nextId = DataPack.with(MultiViewActivity.this).nextId();
+                for (ImageView view : views) {
+                    view.setImageResource(nextId);
+                }
+                container.forceLayout();
+            }
+        };
+
+        // Layout weights dont work properly when pushed against the sides.
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int height = (int) (0.75 * metrics.heightPixels / configs.size());
+        int width = metrics.widthPixels / configs.get(0).length;
+        int dimen = Math.min(height, width);
+        Log.d("NN", "" + container.getMeasuredHeight());
+
+        LayoutParams alp = new LayoutParams(dimen, dimen);
+        alp.setMargins(1,1,1,1 );
 
         for (int c = 0; c < configs.size(); c++) {
 
@@ -128,197 +149,19 @@ public class MultiViewActivity extends AppCompatActivity {
                     auori.setCropType(set[k].scaleCropType);
                     auori.setCropAlignment(set[k].alignment);
                     views.add(auori);
+                } else {
+//                    auori.setBackgroundColor(Color.BLACK);
                 }
-                auori.setLayoutParams(lp);
+
+                auori.setLayoutParams(alp);
                 ll.addView(auori);
             }
             container.addView(ll);
         }
 
-        container.forceLayout();
-
-        for(ImageView view : views) {
-            view.setImageResource(R.mipmap.long_1);
-        }
-
-//
-//        final ImagePageAdapter adapter = new ImagePageAdapter(this, configs);
-//        final ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
-//        pager.setAdapter(adapter);
-//        title.setText(pager.getAdapter().getPageTitle(0));
-//
-//        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                title.setText(adapter.getPageTitle(position));
-//                View view = adapter.getItem(position);
-//                if (view != null) {
-//                    ((ImagePageAdapter.VHItem)view.getTag()).sync();
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
+        findViewById(R.id.switch_image).setOnClickListener(clicker);
+        findViewById(R.id.switch_image).performClick();
     }
 
-
-    private static class ImagePageAdapter extends ObjectPageAdaper {
-
-        private class VHItem {
-            AuoriCropImageView image;
-            int resId;
-
-            VHItem(View itemView) {
-                this.image = (AuoriCropImageView) itemView;
-                itemView.setOnClickListener(clicker);
-                itemView.setTag(this);
-            }
-
-            private void sync() {
-                resId = DataPack.with(context).currentId();;
-                image.setImageResource(resId);
-            }
-
-            private void next() {
-                resId = DataPack.with(context).nextId();
-                image.setImageResource(resId);
-            }
-        }
-
-        private final View.OnClickListener clicker = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((VHItem) view.getTag()).next();
-            }
-        };
-
-        private final LayoutInflater inflater;
-
-        private final Context context;
-
-        private final Configuration[] configs;
-
-        ImagePageAdapter(Context context, Configuration[] configs) {
-            this.context = context;
-            this.configs = configs;
-            this.inflater = LayoutInflater.from(context);
-        }
-
-        public String getPageTitle(int position) {
-            return configs[position].getConfiguration();
-        }
-
-        public View getItem(int position) {
-            return super.getItem(position);
-        }
-
-        @Override
-        public int getCount() {
-            return configs.length;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            VHItem holder;
-            if (view == null) {
-                view = inflater.inflate(R.layout.auori_cropimageview, parent, false);
-                holder = new VHItem(view);
-            } else {
-                holder = (VHItem) view.getTag();
-            }
-
-            bindView(holder, position);
-
-            return view;
-        }
-
-        private void bindView(final VHItem holder, int position) {
-            Configuration config = configs[position];
-            holder.resId = DataPack.with(context).currentId();
-            holder.image.setCropType(config.scaleCropType);
-            holder.image.setCropAlignment(config.alignment);
-            holder.image.setImageResource(holder.resId);
-            holder.image.forceLayout();
-        }
-
-    }
-
-    /**
-     * A page adapter which works with a large data set by reusing views.
-     */
-    private abstract static class ObjectPageAdaper extends PagerAdapter {
-
-        private static class RecycleItem {
-            private int position = -1;
-            private View view;
-        }
-
-        // Views that can be reused.
-        private final List<RecycleItem> recycler = new ArrayList<>();
-        private final List<RecycleItem> active = new ArrayList<>();
-
-        @Override
-        public abstract int getCount();
-
-        public abstract View getView(int position, View view, ViewGroup parent);
-
-        @Override
-        public Object instantiateItem(ViewGroup parent, int position) {
-            RecycleItem item = recycler.isEmpty() ? new RecycleItem() : recycler.remove(0);
-            item.view = getView(position, item.view, parent);
-            item.position = position;
-
-            parent.addView(item.view);
-            active.add(item);
-
-            return item;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            RecycleItem item = (RecycleItem) object;
-            if (item != null) {
-                item.position = -1;
-                recycler.add(item);
-                container.removeView(item.view);
-                active.remove(item);
-            }
-        }
-
-        @Override
-        public boolean isViewFromObject(View v, Object obj) {
-            return v == ((RecycleItem) obj).view;
-        }
-
-        /**
-         * Attempts to return the view based on position.
-         * It can only return -x/+x of current position of the view pager.
-         * @param position
-         * @return view or null. If it returns null, it means its being recycled at the moment
-         */
-        public View getItem(int position) {
-            for (RecycleItem item : active) {
-                if (item.position == position) {
-                    return item.view;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            recycler.clear();
-            super.notifyDataSetChanged();
-        }
-    }
 
 }
