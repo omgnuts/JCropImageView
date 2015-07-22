@@ -1,43 +1,21 @@
-/*
- *
- *  * Copyright (c) 2015. JattCode.com
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *
- *
- *
- */
-
 package com.jattcode.android.auori.demo;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.jattcode.android.auori.view.AuoriCropImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiViewActivity extends AppCompatActivity {
+public class SingleViewActivity extends AppCompatActivity {
 
     private static class Configuration {
         final int scaleCropType;
@@ -73,101 +51,66 @@ public class MultiViewActivity extends AppCompatActivity {
         }
     }
 
-    private static final List<Configuration[]> configs;
+    private static final Configuration[] configs;
 
     static {
-        configs = new ArrayList<>();
+        List<Configuration> items = new ArrayList<>();
 
-        for (int type = 0; type < 3; type++) {
-            Configuration[] set = new Configuration[5];
-            for (int k = 0; k < 5; k++) {
-                set[k] = new Configuration(type, k+1);
-            }
-            configs.add(set);
-        }
+        items.add(new Configuration(0, 1)); // FIT_WIDTH + ALIGN_TOP
+        items.add(new Configuration(0, 2)); // FIT_WIDTH + ALIGN_BOTTOM
+        items.add(new Configuration(0, 3)); // FIT_WIDTH + ALIGN_CENTER
+        //items.add(new Configuration(0, 4)); // FIT_WIDTH + ALIGN_LEFT
+        //items.add(new Configuration(0, 5)); // FIT_WIDTH + ALIGN_RIGHT
 
-//        configs.get(0)[3] = null; // FIT_WIDTH + ALIGN_LEFT
-//        configs.get(0)[4] = null; // FIT_WIDTH + ALIGN_RIGHT
-//
-//        configs.get(2)[0] = null; // FIT_HEIGHT + ALIGN_TOP
-//        configs.get(2)[1] = null; // FIT_HEIGHT + ALIGN_BOTTOM
-    }
+        items.add(new Configuration(1, 1)); // FIT_FILL + ALIGN_TOP
+        items.add(new Configuration(1, 2)); // FIT_FILL + ALIGN_BOTTOM
+        items.add(new Configuration(1, 3)); // FIT_FILL + ALIGN_CENTER
+        items.add(new Configuration(1, 4)); // FIT_FILL + ALIGN_LEFT
+        items.add(new Configuration(1, 5)); // FIT_FILL + ALIGN_RIGHT
 
-    private static LinearLayout createLayout(Context context, LayoutParams lp, int orient) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setLayoutParams(lp);
-        layout.setOrientation(orient);
-        layout.setBackgroundColor(Color.CYAN);
-        return layout;
+        //items.add(new Configuration(2, 1)); // FIT_HEIGHT + ALIGN_TOP
+        //items.add(new Configuration(2, 2)); // FIT_HEIGHT + ALIGN_BOTTOM
+        items.add(new Configuration(2, 3)); // FIT_HEIGHT + ALIGN_CENTER
+        items.add(new Configuration(2, 4)); // FIT_HEIGHT + ALIGN_LEFT
+        items.add(new Configuration(2, 5)); // FIT_HEIGHT + ALIGN_RIGHT
+
+        configs = items.toArray(new Configuration[items.size()]);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_multiview);
+        setContentView(R.layout.activity_singleview);
 
-        LinearLayout container = (LinearLayout) findViewById(R.id.container);
-        container.setOrientation(LinearLayout.VERTICAL);
-//        container.setWeightSum(configs.size());
+        final TextView title = (TextView)findViewById(R.id.title_view);
 
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.weight = 1;
+        final ImagePageAdapter adapter = new ImagePageAdapter(this, configs);
+        final ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
+        pager.setAdapter(adapter);
+        title.setText(pager.getAdapter().getPageTitle(0));
 
-        List<ImageView> views = new ArrayList<>();
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-        for (int c = 0; c < configs.size(); c++) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            LinearLayout ll = createLayout(this, lp, LinearLayout.HORIZONTAL);
-            Configuration[] set = configs.get(c);
-//            ll.setWeightSum(set.length);
-
-            for (int k = 0; k < set.length; k++) {
-                AuoriCropImageView auori = new AuoriCropImageView(this);
-                if (set[k] != null) {
-                    auori.setCropType(set[k].scaleCropType);
-                    auori.setCropAlignment(set[k].alignment);
-                    views.add(auori);
-                }
-                auori.setLayoutParams(lp);
-                ll.addView(auori);
             }
-            container.addView(ll);
-        }
 
-        container.forceLayout();
+            @Override
+            public void onPageSelected(int position) {
+                title.setText(adapter.getPageTitle(position));
+                View view = adapter.getItem(position);
+                if (view != null) {
+                    ((ImagePageAdapter.VHItem)view.getTag()).sync();
+                }
+            }
 
-        for(ImageView view : views) {
-            view.setImageResource(R.mipmap.long_1);
-        }
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-//
-//        final ImagePageAdapter adapter = new ImagePageAdapter(this, configs);
-//        final ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
-//        pager.setAdapter(adapter);
-//        title.setText(pager.getAdapter().getPageTitle(0));
-//
-//        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                title.setText(adapter.getPageTitle(position));
-//                View view = adapter.getItem(position);
-//                if (view != null) {
-//                    ((ImagePageAdapter.VHItem)view.getTag()).sync();
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
+            }
+        });
     }
 
 

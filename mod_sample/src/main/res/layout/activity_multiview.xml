@@ -19,24 +19,23 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/container"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_multi_view"
-        android:text="Multi View"
-        />
-
-    <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Single View"
-      android:id="@+id/button_single_view"
+      android:id="@+id/switch_image"
+      android:text="Change image"
       />
 
+    <LinearLayout
+      android:id="@+id/container"
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+    </LinearLayout>
 </LinearLayout>
