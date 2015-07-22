@@ -3,9 +3,7 @@ package com.jattcode.android.auori.demo;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Javan on 9/7/2015.
- */
+
 public class DataEngine {
 
     private static ImageItem[] images;

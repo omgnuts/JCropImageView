@@ -11,8 +11,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
 
-//    compile project(':library')
-    compile 'com.jattcode:auori-cropimageview:0.1-SNAPSHOT'
+    compile project(':library')
+//    compile 'com.jattcode:auori-cropimageview:0.1-SNAPSHOT'
 }
 
 /* .............................................................

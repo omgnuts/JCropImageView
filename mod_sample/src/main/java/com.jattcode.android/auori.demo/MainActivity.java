@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.jattcode.android.auori.demo.DataEngine.ImageItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView title = (TextView)findViewById(R.id.title_view);
 
         final ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
-        pager.setAdapter(new ImagePageAdapter(this, DataEngine.getImages()));
+        pager.setAdapter(new ImagePageAdapter(this, new int[] { 1, 2 }));
         title.setText(pager.getAdapter().getPageTitle(0));
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -46,52 +45,73 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    
+
     private static class ImagePageAdapter extends ObjectPageAdaper {
 
-        private static class ViewHolder {
+        private class VHItem {
             ImageView image;
+            int shape;
+            int resId;
 
-            ViewHolder(View itemView) {
+            VHItem(View itemView) {
                 this.image = (ImageView) itemView.findViewById(R.id.image_view);
+                itemView.setOnClickListener(clicker);
                 itemView.setTag(this);
             }
         }
 
-        final ImageItem[] images;
+        private final View.OnClickListener clicker = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("AA", "clicked");
+                VHItem holder = (VHItem) view.getTag();
+                holder.resId = DataPack.with(context).nextId(holder.shape);
+                holder.image.setImageResource(holder.resId);
+            }
+        };
 
-        final LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
-        ImagePageAdapter(Context context, ImageItem[] items) {
+        private final Context context;
+
+        private final int[] shapes;
+
+        ImagePageAdapter(Context context, int[] shapes) {
+            this.context = context;
             this.inflater = LayoutInflater.from(context);
-            this.images = items;
+            this.shapes = shapes;
         }
 
         public String getPageTitle(int position) {
-            return images[position].name;
+            return "Some title";
         }
 
         @Override
         public int getCount() {
-            return images.length;
+            return shapes.length;
         }
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
-            ViewHolder holder;
+            VHItem holder;
             if (view == null) {
-                view = inflater.inflate(R.layout.auori_cropimageview, null);
-                holder = new ViewHolder(view);
+                view = inflater.inflate(R.layout.auori_cropimageview, parent, false);
+                holder = new VHItem(view);
             } else {
-                holder = (ViewHolder) view.getTag();
+                holder = (VHItem) view.getTag();
             }
 
             bindView(holder, position);
             return view;
         }
 
-        private void bindView(final ViewHolder holder, int position) {
-            holder.image.setImageResource(images[position].resId);
+        private void bindView(final VHItem holder, int position) {
+            holder.shape = shapes[position];
+            holder.resId = DataPack.with(context).currentId(holder.shape);
+            holder.image.setImageResource(holder.resId);
         }
+
     }
 
     /**
