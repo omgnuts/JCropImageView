@@ -11,18 +11,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.jattcode.android.auori.demo.DataEngine.ImageItem;
+
+import com.jattcode.android.auori.view.AuoriCropImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static class Configuration {
-        private final int scaleCropType;
-        private final int alignment;
+        final int scaleCropType;
+        final int alignment;
+
         private Configuration(int type, int align) {
             scaleCropType = type;
             alignment = align;
+        }
+
+        private String getConfiguration() {
+            return getCropType(scaleCropType) + " : " + getAlignment(alignment);
+        }
+
+        private static String getCropType(int id) {
+            switch(id) {
+                case 0: return "FIT_WIDTH";
+                case 1: return "FIT_FILL";
+                case 2: return "FIT_HEIGHT";
+            }
+            return "NA";
+        }
+
+        private static String getAlignment(int id) {
+            switch(id) {
+                case 1: return "ALIGN_TOP_OF_IMAGEVIEW";
+                case 2: return "ALIGN_BOTTOM_OF_IMAGEVIEW";
+                case 3: return "ALIGN_CENTER_OF_IMAGEVIEW";
+                case 4: return "ALIGN_LEFT_OF_IMAGEVIEW";
+                case 5: return "ALIGN_RIGHT_OF_IMAGEVIEW";
+            }
+            return "NA";
         }
     }
 
@@ -59,8 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView title = (TextView)findViewById(R.id.title_view);
 
+        final ImagePageAdapter adapter = new ImagePageAdapter(this, configs);
         final ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
-        pager.setAdapter(new ImagePageAdapter(this, new int[] { 1, 2 }));
+        pager.setAdapter(adapter);
         title.setText(pager.getAdapter().getPageTitle(0));
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -70,7 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                title.setText(pager.getAdapter().getPageTitle(position));
+                title.setText(adapter.getPageTitle(position));
+                View view = adapter.getItem(position);
+
+                Log.d("AA", "view = " + view);
+                if (view != null) {
+                    ((ImagePageAdapter.VHItem)view.getTag()).sync();
+                }
             }
 
             @Override
@@ -83,24 +117,30 @@ public class MainActivity extends AppCompatActivity {
     private static class ImagePageAdapter extends ObjectPageAdaper {
 
         private class VHItem {
-            ImageView image;
-            int shape;
+            AuoriCropImageView image;
             int resId;
 
             VHItem(View itemView) {
-                this.image = (ImageView) itemView.findViewById(R.id.image_view);
+                this.image = (AuoriCropImageView) itemView.findViewById(R.id.image_view);
                 itemView.setOnClickListener(clicker);
                 itemView.setTag(this);
+            }
+
+            private void sync() {
+                resId = DataPack.with(context).currentId();
+                image.setImageResource(resId);
+            }
+
+            private void next() {
+                resId = DataPack.with(context).nextId();
+                image.setImageResource(resId);
             }
         }
 
         private final View.OnClickListener clicker = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("AA", "clicked");
-                VHItem holder = (VHItem) view.getTag();
-                holder.resId = DataPack.with(context).nextId(holder.shape);
-                holder.image.setImageResource(holder.resId);
+                ((VHItem) view.getTag()).next();
             }
         };
 
@@ -108,21 +148,25 @@ public class MainActivity extends AppCompatActivity {
 
         private final Context context;
 
-        private final int[] shapes;
+        private final Configuration[] configs;
 
-        ImagePageAdapter(Context context, int[] shapes) {
+        ImagePageAdapter(Context context, Configuration[] configs) {
             this.context = context;
+            this.configs = configs;
             this.inflater = LayoutInflater.from(context);
-            this.shapes = shapes;
         }
 
         public String getPageTitle(int position) {
-            return "Some title";
+            return configs[position].getConfiguration();
+        }
+
+        public View getItem(int position) {
+            return (View)super.getItem(position);
         }
 
         @Override
         public int getCount() {
-            return shapes.length;
+            return configs.length;
         }
 
         @Override
@@ -140,9 +184,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void bindView(final VHItem holder, int position) {
-            holder.shape = shapes[position];
-            holder.resId = DataPack.with(context).currentId(holder.shape);
+            Configuration config = configs[position];
+            holder.resId = DataPack.with(context).currentId();
             holder.image.setImageResource(holder.resId);
+            holder.image.setCropType(config.scaleCropType);
+            holder.image.setCropAlignment(config.alignment);
         }
 
     }
@@ -151,6 +197,11 @@ public class MainActivity extends AppCompatActivity {
      * A page adapter which works with a large data set by reusing views.
      */
     private abstract static class ObjectPageAdaper extends PagerAdapter {
+
+        private static class RecycleItem {
+            int position = -1;
+            View view;
+        }
 
         // Views that can be reused.
         private final List<View> recycler = new ArrayList<View>();
@@ -180,6 +231,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean isViewFromObject(View v, Object obj) {
             return v == obj;
+        }
+
+        /**
+         * Attempts to return the view based on position.
+         * It can only return -x/+x of current position of the view pager.
+         * @param position
+         * @return view or null. If it returns null, it means its being recycled at the moment
+         */
+        public Object getItem(int position) {
+            for (View view : recycler) {
+                if (getItemPosition(view) == position) {
+                    return view;
+                }
+            }
+            return null;
         }
 
         @Override

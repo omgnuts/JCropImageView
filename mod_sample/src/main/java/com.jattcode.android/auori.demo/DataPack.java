@@ -131,7 +131,6 @@ public class DataPack {
             }
         }
 
-        Log.d("AA", "found shape");
         ImageItem result = images[cursor];
 
         return result;
