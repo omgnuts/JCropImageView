@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 title.setText(adapter.getPageTitle(position));
                 View view = adapter.getItem(position);
-
                 Log.d("AA", "view = " + view);
                 if (view != null) {
                     ((ImagePageAdapter.VHItem)view.getTag()).sync();
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public View getItem(int position) {
-            return (View)super.getItem(position);
+            return super.getItem(position);
         }
 
         @Override
@@ -200,11 +199,14 @@ public class MainActivity extends AppCompatActivity {
 
         private static class RecycleItem {
             int position = -1;
-            View view;
+            final View view;
+            RecycleItem(View view) {
+                this.view = view;
+            }
         }
 
         // Views that can be reused.
-        private final List<View> recycler = new ArrayList<View>();
+        private final List<RecycleItem> recycler = new ArrayList<>();
 
         @Override
         public abstract int getCount();
@@ -213,24 +215,33 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup parent, int position) {
-            View view = recycler.isEmpty() ? null : recycler.remove(0);
+            RecycleItem item = recycler.isEmpty() ? null : recycler.remove(0);
+
+            View view = (item != null) ? item.view : null;
             view = getView(position, view, parent);
-            parent.addView(view);
-            return view;
+
+            if (item == null) {
+                item = new RecycleItem(view);
+            }
+            item.position = position;
+
+            parent.addView(item.view);
+            return item;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            View view = (View) object;
-            if (view != null) {
-                recycler.add(view);
-                container.removeView(view);
+            RecycleItem item = (RecycleItem) object;
+            if (item != null) {
+                item.position = -1;
+                recycler.add(item);
+                container.removeView(item.view);
             }
         }
 
         @Override
         public boolean isViewFromObject(View v, Object obj) {
-            return v == obj;
+            return v == ((RecycleItem) obj).view;
         }
 
         /**
@@ -239,10 +250,10 @@ public class MainActivity extends AppCompatActivity {
          * @param position
          * @return view or null. If it returns null, it means its being recycled at the moment
          */
-        public Object getItem(int position) {
-            for (View view : recycler) {
-                if (getItemPosition(view) == position) {
-                    return view;
+        public View getItem(int position) {
+            for (RecycleItem item: recycler) {
+                if (item.position == position) {
+                    return item.view;
                 }
             }
             return null;
