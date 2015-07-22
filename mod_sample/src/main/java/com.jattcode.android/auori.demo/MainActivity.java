@@ -17,6 +17,41 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static class Configuration {
+        private final int scaleCropType;
+        private final int alignment;
+        private Configuration(int type, int align) {
+            scaleCropType = type;
+            alignment = align;
+        }
+    }
+
+    private static final Configuration[] configs;
+
+    static {
+        List<Configuration> items = new ArrayList<>();
+
+        items.add(new Configuration(0, 1)); // FIT_WIDTH + ALIGN_TOP
+        items.add(new Configuration(0, 2)); // FIT_WIDTH + ALIGN_BOTTOM
+        items.add(new Configuration(0, 3)); // FIT_WIDTH + ALIGN_CENTER
+        //items.add(new Configuration(0, 4)); // FIT_WIDTH + ALIGN_LEFT
+        //items.add(new Configuration(0, 5)); // FIT_WIDTH + ALIGN_RIGHT
+
+        items.add(new Configuration(1, 1)); // FIT_FILL + ALIGN_TOP
+        items.add(new Configuration(1, 2)); // FIT_FILL + ALIGN_BOTTOM
+        items.add(new Configuration(1, 3)); // FIT_FILL + ALIGN_CENTER
+        items.add(new Configuration(1, 4)); // FIT_FILL + ALIGN_LEFT
+        items.add(new Configuration(1, 5)); // FIT_FILL + ALIGN_RIGHT
+
+        //items.add(new Configuration(2, 1)); // FIT_HEIGHT + ALIGN_TOP
+        //items.add(new Configuration(2, 2)); // FIT_HEIGHT + ALIGN_BOTTOM
+        items.add(new Configuration(2, 3)); // FIT_HEIGHT + ALIGN_CENTER
+        items.add(new Configuration(2, 4)); // FIT_HEIGHT + ALIGN_LEFT
+        items.add(new Configuration(2, 5)); // FIT_HEIGHT + ALIGN_RIGHT
+
+        configs = items.toArray(new Configuration[items.size()]);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    
 
     private static class ImagePageAdapter extends ObjectPageAdaper {
 
