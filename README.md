@@ -1,6 +1,6 @@
-### Overview of XCropImageView
+### Overview of AuoriCropImageView
 
-XCropImageView provides 11 configurations
+AuoriCropImageView provides 11 configurations
  
 * FitWidth  - 3 configurations - TOP/BOTTOM/CENTER
 * FitHeight - 3 configurations - CENTER/LEFT/RIGHT
@@ -20,11 +20,11 @@ repositories {
 }
 
 dependencies {
-    compile 'com.jattcode:android-xcropimageview:0.1'
+    compile 'com.jattcode:android-auori-cropimageview:0.1'
 }
 ```
 
-### How to use XCropImageView
+### How to use AuoriCropImageView
 
 Just create an imageview as usual in xml. Then specify the configurations "app:scaleCropType" and "app:alignTo".
 If "app:scaleCropType" is not specified, this reverts back to the default behaviour an Android ImageView.
