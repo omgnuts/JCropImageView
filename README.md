@@ -1,3 +1,5 @@
+To .self
+
 ### Overview of AuoriCropImageView
 
 AuoriCropImageView provides 11 configurations
