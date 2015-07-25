@@ -1,8 +1,8 @@
 To .self
 
-### Overview of AuoriCropImageView
+### Overview of JCropImageView
 
-AuoriCropImageView provides 11 configurations
+JCropImageView provides 11 configurations
  
 * FitWidth  - 3 configurations - TOP/BOTTOM/CENTER
 * FitHeight - 3 configurations - CENTER/LEFT/RIGHT
@@ -18,21 +18,21 @@ THe configurations are more visible with FitBest, which will decide which bound 
 
 ```
 repositories {
-    maven { url 'https://dl.bintray.com/jimcoven/public/' }
+    mavenCentral()
 }
 
 dependencies {
-    compile 'com.jattcode:android-auori-cropimageview:0.1'
+    compile 'com.github.jimcoven:jcropimageview:0.1'
 }
 ```
 
-### How to use AuoriCropImageView
+### How to use JCropImageView
 
 Just create an imageview as usual in xml. Then specify the configurations "app:scaleCropType" and "app:alignTo".
 If "app:scaleCropType" is not specified, this reverts back to the default behaviour an Android ImageView.
 
 ```
-<com.jattcode.android.view.XCropImageView
+<com.github.jimcoven.view.JCropImageView
     android:id="@+id/image_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
