@@ -2,7 +2,7 @@
 
 One of the popular scaletype configurations used in Android is the "centerCrop". However, it is limited to just center cropping. This usually crops off the faces of people from images that have an aspect ratio height > width. 
 
-JCropImageView extends on the centercrop feature to provide additional control over how the images are displayed. For example in the screenshot below:
+JCropImageView is a lightweight extension of the centercrop feature to provide additional control over how the images are displayed. For example in the screenshot below:
 
 - JCropImageView is used on the top, and it shows IronMan's face. 
 - ImageView (Android Default) with centerCrop is shown below, and only the body is shown.
