@@ -1,4 +1,0 @@
-include ':library'
-project(':library').projectDir = new File('mod_library')
-include ':sample'
-project(':sample').projectDir = new File('mod_sample')

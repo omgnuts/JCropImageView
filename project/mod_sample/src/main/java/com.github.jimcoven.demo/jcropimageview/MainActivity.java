@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         configs = items.toArray(new Configuration[items.size()]);
     }
 
-    private final int fattener = 2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +66,9 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
 
         LayoutParams llparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        llparams.setMargins(fattener, fattener, fattener, fattener);
 
         for (int c = 0; c < configs.length; c++) {
             Button button = new Button(this);
-            button.setPadding(fattener, fattener, fattener, fattener);
             button.setLayoutParams(llparams);
             button.setText(configs[c].getConfigurationName());
             button.setId(c);
