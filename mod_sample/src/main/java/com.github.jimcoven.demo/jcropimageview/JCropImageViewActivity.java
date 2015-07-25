@@ -45,9 +45,6 @@ public class JCropImageViewActivity extends AppCompatActivity {
 
         Configuration config = getIntent().getParcelableExtra("config");
 
-        TextView title = (TextView) findViewById(R.id.title_view);
-        title.setText(config.getConfigurationName());
-
         ImagePageAdapter adapter = new ImagePageAdapter(this, config,
                 ImagePack.with(this));
         ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
@@ -60,11 +57,16 @@ public class JCropImageViewActivity extends AppCompatActivity {
 
         private class VHItem {
             JCropImageView jcropImage;
+            TextView jcropTitle;
             ImageView image;
+            TextView title;
+
 
             VHItem(View itemView) {
                 this.jcropImage = (JCropImageView) itemView.findViewById(R.id.jcropimage_view);
+                this.jcropTitle = (TextView) itemView.findViewById(R.id.jcrop_title);
                 this.image = (ImageView) itemView.findViewById(R.id.image_view);
+                this.title = (TextView) itemView.findViewById(R.id.title_view);
 
                 jcropImage.setCropType(config.cropType);
                 jcropImage.setCropAlign(config.cropAlign);
@@ -110,7 +112,19 @@ public class JCropImageViewActivity extends AppCompatActivity {
 
         private void bindView(final VHItem holder, int position) {
             holder.jcropImage.setImageDrawable(imagePack.getDrawable(position));
-            holder.image.setImageDrawable(imagePack.getDrawable(position));
+            String jconfig = context.getResources().getString(R.string.jcrop_image_view,
+                    config.getConfigurationName());
+            holder.jcropTitle.setText(jconfig);
+
+            if (config.cropType == JCropImageView.CropType.FIT_FILL) {
+                holder.image.setImageDrawable(imagePack.getDrawable(position));
+                holder.title.setText(R.string.default_image_view);
+            } else {
+                // Default ImageView (CenterCrop) does not obey
+                // layout-weight = 1 where height = match_parent
+                holder.image.setVisibility(View.GONE);
+                holder.title.setVisibility(View.GONE);
+            }
         }
 
     }
