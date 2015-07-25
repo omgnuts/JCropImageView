@@ -9,7 +9,7 @@ JCropImageView extends on the centercrop feature to provide additional control o
 
 ![alt text][fill_top1]
 
-[fill_top1] https://raw.githubusercontent.com/jimcoven/JCropImageView/master/screens/fill_top1.jpg "pic1"
+[fill_top1]: https://raw.githubusercontent.com/jimcoven/JCropImageView/master/screens/fill_top1.jpg "pic1"
 
 In total, JCropImageView provides 11 configurations
  
