@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Auori</string>
-    <string name="action_settings">Settings</string>
-    <string name="sample_button">This is a sample button</string>
+    <string name="app_name">JCropImageView Illustration</string>
 
 </resources>

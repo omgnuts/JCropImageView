@@ -1,38 +1,37 @@
 /*
+ *  Copyright (c) 2015. Jim Coven
+ *  http://www.github.com/jimcoven
  *
- *  * Copyright (c) 2015. JattCode.com
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 
-package com.jattcode.android.auori.view;
+package com.github.jimcoven.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
-import com.jattcode.android.auori.R;
+import com.github.jimcoven.jcropimageview.R;
 
 /**
- * AuoriCropImageView provides 11 configurations
+ * JCropImageView provides 11 configurations
  *
  * FitWidth  - 3 configurations - TOP/BOTTOM/CENTER
  * FitHeight - 3 configurations - CENTER/LEFT/RIGHT
@@ -48,43 +47,43 @@ import com.jattcode.android.auori.R;
  * The default android scaleType=centerCrop is effectively 1 of the above configurations FitBest + CENTER
  *
  */
-public class AuoriCropImageView extends ImageView {
 
-    // Keep this here for reference
-//    public static final class ScaleCropType {
-//        public static final int FIT_WIDTH = 0;
-//        public static final int FIT_FILL = 1;
-//        public static final int FIT_HEIGHT = 2;
-//    }
-//
-//    public static final class AlignTo {
-//        public static final int ALIGN_TOP = 1;
-//        public static final int ALIGN_BOTTOM = 2;
-//        public static final int ALIGN_CENTER = 3;
-//        public static final int ALIGN_LEFT = 4;
-//        public static final int ALIGN_RIGHT = 5;
-//    }
+public class JCropImageView extends ImageView {
 
-    private int mScaleCropType = -1;
-    private int mAlignment = 0;
+    public static final class CropType {
+        public static final int FIT_WIDTH = 0;
+        public static final int FIT_FILL = 1;
+        public static final int FIT_HEIGHT = 2;
+    }
 
-    public AuoriCropImageView(Context context) {
+    public static final class CropAlign {
+        public static final int ALIGN_TOP = 0;
+        public static final int ALIGN_BOTTOM = 1;
+        public static final int ALIGN_CENTER = 2;
+        public static final int ALIGN_LEFT = 3;
+        public static final int ALIGN_RIGHT = 4;
+    }
+
+    private int mCropType = -1;
+    private int mCropAlign = 0;
+
+    public JCropImageView(Context context) {
         super(context);
         initFromAttributes(context, null, 0, 0);
     }
 
-    public AuoriCropImageView(Context context, AttributeSet attrs) {
+    public JCropImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initFromAttributes(context, attrs, 0, 0);
     }
 
-    public AuoriCropImageView(Context context, AttributeSet attrs, int defStyle) {
+    public JCropImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initFromAttributes(context, attrs, defStyle, 0);
     }
 
     /**
-     * Initialize the attributes for the AuoriImageView
+     * Initialize the attributes for JCropImageView
      *
      * @param context The Context the view is running in, through which it can
      *        access the current theme, resources, etc.
@@ -96,34 +95,34 @@ public class AuoriCropImageView extends ImageView {
      *        supplies default values for the view, used only if
      *        defStyleAttr is 0 or can not be found in the theme. Can be 0
      *        to not look for defaults.
-     * @see #View(Context, AttributeSet, int)
+     * @see @link android.view.View(Context, AttributeSet, int)
      */
     private void initFromAttributes(Context context, AttributeSet attrs,
                                int defStyleAttr, int defStyleRes) {
         // Read and apply provided attributes
         TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.AuoriCropImageView, defStyleAttr, defStyleRes);
-        mScaleCropType = a.getInt(R.styleable.AuoriCropImageView_scaleCropType, mScaleCropType);
-        mAlignment = a.getInt(R.styleable.AuoriCropImageView_alignTo, mAlignment);
+                R.styleable.JCropImageView, defStyleAttr, defStyleRes);
+        mCropType = a.getInt(R.styleable.JCropImageView_cropType, mCropType);
+        mCropAlign = a.getInt(R.styleable.JCropImageView_cropAlign, mCropAlign);
         a.recycle();
 
-        setCropType(mScaleCropType);
+        setCropType(mCropType);
     }
 
-    public void setCropType(int scaleCropType) {
-        mScaleCropType = scaleCropType;
-        if (mScaleCropType > -1) setScaleType(ScaleType.MATRIX);
+    public void setCropType(int cropType) {
+        mCropType = cropType;
+        if (mCropType > -1) setScaleType(ScaleType.MATRIX);
     }
 
-    public void setCropAlignment(int alignment) {
-        mAlignment = alignment;
+    public void setCropAlign(int cropAlign) {
+        mCropAlign = cropAlign;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @TargetApi(VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Drawable d = getDrawable();
-        if (d != null && mScaleCropType > -1) {
+        if (d != null && mCropType > -1) {
 
             final int dw = d.getIntrinsicWidth();
             final int dh = d.getIntrinsicHeight();
@@ -133,10 +132,10 @@ public class AuoriCropImageView extends ImageView {
             float scalew = 0, scaleh = 0;
             float scale = 0;
 
-            if (mScaleCropType < 2) { // fit width || bestfit
+            if (mCropType <= CropType.FIT_FILL) { // fit width || bestfit
                 // 1. get anchor by width. constrain to drawablewidth if wrap-content
                 msWidth = MeasureSpec.getSize(widthMeasureSpec); // the view width
-                if (getLayoutParams().width == -2) { // wrap
+                if (getLayoutParams().width == LayoutParams.WRAP_CONTENT) { // wrap
                     msWidth = dw < msWidth ? dw : msWidth;
                 }
 
@@ -145,10 +144,10 @@ public class AuoriCropImageView extends ImageView {
                 theoryh = (int) (dh * scalew); // theoretical = height x scale_via_width
             }
 
-            if (mScaleCropType > 0) {// fit bestfit || height
+            if (mCropType >= CropType.FIT_FILL) {// fit bestfit || height
                 // 1. get anchor by height. constrain to drawableheight if wrap-content
                 msHeight = MeasureSpec.getSize(heightMeasureSpec); // the view height
-                if (getLayoutParams().height == -2) { // wrap
+                if (getLayoutParams().height == LayoutParams.WRAP_CONTENT) { // wrap
                     msHeight = dh < msHeight ? dh : msHeight;
                 }
 
@@ -165,18 +164,21 @@ public class AuoriCropImageView extends ImageView {
                 // if wrap_content then anything works even if viewport < or >  maxheight
                 int maxHeight = getMaxHeight();
                 msHeight = getLayoutParams().height;
-                if (msHeight > -2) { // match parent
-                    if (msHeight == -1) msHeight = MeasureSpec.getSize(heightMeasureSpec);
+                if (msHeight >= LayoutParams.MATCH_PARENT) { // match parent
+                    if (msHeight == LayoutParams.MATCH_PARENT) {
+                        msHeight = MeasureSpec.getSize(heightMeasureSpec);
+                    }
                     maxHeight = msHeight < maxHeight ? msHeight : maxHeight;
                 }
                 msHeight = theoryh > maxHeight ? maxHeight : theoryh; // limited height
 
                 // 4. translate
-
-                if (mAlignment > 2) { // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_LEFT || AlignTo.ALIGN_RIGHT
+                if (mCropAlign >= CropAlign.ALIGN_CENTER) {
+                    // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_LEFT || AlignTo.ALIGN_RIGHT
                     // if you want center crop shift it up by 50% aka 0.5f
                     dy = (int)( (msHeight - theoryh) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mAlignment == 2) { // AlignTo.ALIGN_BOTTOM
+                } else if (mCropAlign == CropAlign.ALIGN_BOTTOM) {
+                    // AlignTo.ALIGN_BOTTOM
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dy = (int)( (msHeight - theoryh) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
@@ -189,23 +191,25 @@ public class AuoriCropImageView extends ImageView {
                 // if wrap_content then anything works even if viewport < or >  maxwidth
                 int maxWidth = getMaxWidth();
                 msWidth = getLayoutParams().width;
-                if (msWidth > -2) { // match parent or is set
-                    if (msWidth == -1) msWidth = MeasureSpec.getSize(widthMeasureSpec);
+                if (msWidth >= LayoutParams.MATCH_PARENT) { // match parent or is set
+                    if (msWidth == LayoutParams.MATCH_PARENT) {
+                        msWidth = MeasureSpec.getSize(widthMeasureSpec);
+                    }
                     maxWidth = msWidth < maxWidth ? msWidth : maxWidth;
                 }
                 msWidth = theoryw > maxWidth ? maxWidth : theoryw; // limited width
 
-                if (mAlignment < 4) { // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_TOP || AlignTo.ALIGN_BOTTOM
+                if (mCropAlign <= CropAlign.ALIGN_CENTER) {
+                    // AlignTo.ALIGN_CENTER || AlignTo.ALIGN_TOP || AlignTo.ALIGN_BOTTOM
                     // if you want center crop shift it left by 50% aka 0.5f
                     dx = (int)( (msWidth - theoryw) * 0.5f + 0.5f ); // + 0.5f for rounding
-                } else if (mAlignment == 5) { //AlignTo.ALIGN_RIGHT
+                } else if (mCropAlign == CropAlign.ALIGN_RIGHT) { //AlignTo.ALIGN_RIGHT
                     // if you want bottom crop shift it up by 100% aka 1.0f
                     dx = (int)( (msWidth - theoryw) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
             }
 
-            // this is to scale it only by width
-            // - the pivot point is at (0,0)
+            // this is to scale it only by width - the pivot point is at (0,0)
             // for top crop we dont need to translate it
             Matrix matrix = getImageMatrix();
             matrix.setScale(scale, scale);

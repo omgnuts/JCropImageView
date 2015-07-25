@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 ext {
-    app_id = 'com.jattcode.android.auori.demo' // usually the namespace. Note it is not the same as package
+    app_id = 'com.github.jimcoven.demo.jcropimageview' // usually the namespace. Note it is not the same as package
     app_version_code = 1
     app_version = '0.1'
 }
@@ -12,7 +12,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
 
     compile project(':library')
-//    compile 'com.jattcode:auori-cropimageview:0.1-SNAPSHOT'
+//    compile 'com.github.jimcoven:jcropimageview:0.1-SNAPSHOT'
+//    compile 'com.jattcode:jcropimageview:0.1-SNAPSHOT'
 }
 
 /* .............................................................
