@@ -40,7 +40,6 @@
         android:id="@+id/jcropimage_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         app:cropType="fit_fill"
         app:cropAlign="top"
     />

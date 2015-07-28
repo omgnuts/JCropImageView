@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Configuration config = configs[position];
-            holder.image.setImageDrawable(getDrawable(config.display));
+            holder.image.setImageDrawable(getResources().getDrawable(config.display));
             holder.title.setText("(" + (position + 1) + ") " + config.getConfigurationName());
             holder.config = config;
         }
