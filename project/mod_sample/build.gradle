@@ -11,14 +11,14 @@ ext {
 
     app_id = 'com.github.jimcoven.demo.jcropimageview' // usually the namespace. Note it is not the same as package
     app_version_code = 1
-    app_version = '0.21'
+    app_version = '0.22'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.github.jimcoven:jcropimageview:0.20-SNAPSHOT'
+    compile 'com.github.jimcoven:jcropimageview:0.22'
 }
 
 /* .............................................................
