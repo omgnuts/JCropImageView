@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 ext {
-
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    signapk_alias = properties.getProperty("signapk.alias")
-    signapk_pass1 = properties.getProperty("signapk.pass1")
-    signapk_store = properties.getProperty("signapk.store")
-    signapk_pass2 = properties.getProperty("signapk.pass2")
-
     app_id = 'com.github.jimcoven.demo.jcropimageview' // usually the namespace. Note it is not the same as package
     app_version_code = 1
     app_version = '0.22'

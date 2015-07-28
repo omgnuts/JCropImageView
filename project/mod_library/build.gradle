@@ -7,13 +7,6 @@ apply plugin: 'signing'
  */
 
 ext {
-    // credentials
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-    sonatype_userid = properties.getProperty("sonatype.userid")
-    sonatype_passwd = properties.getProperty("sonatype.passwd")
-
     // bare minimum params for uploading archive
     package_name = 'JCropImageView'
     group_id = 'com.github.jimcoven'
@@ -68,4 +61,4 @@ android {
     }
 }
 
-apply from: '../aar-publish.gradle'
+//apply from: '../aar-publish.gradle'
