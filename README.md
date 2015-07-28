@@ -9,7 +9,7 @@ JCropImageView is a lightweight extension of the centercrop feature to provide a
 
 ![alt text][fill_top1]
 
-[fill_top1]: https://raw.githubusercontent.com/jimcoven/JCropImageView/master/screens/fill_top1.jpg "pic1"
+[fill_top1]: https://raw.githubusercontent.com/jimcoven/JCropImageView/master/art/screens/fill_top1.jpg "pic1"
 
 In total, JCropImageView provides 11 configurations
  
