@@ -49,7 +49,11 @@ dependencies {
 Just create an imageview as usual in xml. Then specify the configurations "app:cropType" and "app:cropAlign".
 If "app:cropType" is not specified, this reverts back to the default behaviour an Android ImageView.
 
+Note! Remember to include the namespace xlmns:app 
+
 ```
+xmlns:app="http://schemas.android.com/apk/res-auto" 
+
 <com.github.jimcoven.view.JCropImageView
     android:id="@+id/image_view"
     android:layout_width="match_parent"
