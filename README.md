@@ -36,7 +36,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.jimcoven:jcropimageview:0.21'
+    compile 'com.github.jimcoven:jcropimageview:0.22'
 }
 ```
 
