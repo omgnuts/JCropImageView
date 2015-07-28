@@ -8,17 +8,17 @@ apply plugin: 'signing'
 
 ext {
     // credentials
-//    Properties properties = new Properties()
-//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-//
-//    sonatype_userid = properties.getProperty("sonatype.userid")
-//    sonatype_passwd = properties.getProperty("sonatype.passwd")
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    sonatype_userid = properties.getProperty("sonatype.userid")
+    sonatype_passwd = properties.getProperty("sonatype.passwd")
 
     // bare minimum params for uploading archive
     package_name = 'JCropImageView'
     group_id = 'com.github.jimcoven'
     artifact_id = 'jcropimageview'
-    lib_version = '0.21'
+    lib_version = '0.22'
     lib_version_code = 1
     git_url = 'https://github.com/jimcoven/JCropImageView.git'
     site_url = 'https://github.com/jimcoven/JCropImageView'
@@ -68,4 +68,4 @@ android {
     }
 }
 
-//apply from: '../aar-publish.gradle'
+apply from: '../aar-publish.gradle'

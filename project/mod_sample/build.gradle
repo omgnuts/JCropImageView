@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 ext {
 
-//    Properties properties = new Properties()
-//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-//    signapk_alias = properties.getProperty("signapk.alias")
-//    signapk_pass1 = properties.getProperty("signapk.pass1")
-//    signapk_store = properties.getProperty("signapk.store")
-//    signapk_pass2 = properties.getProperty("signapk.pass2")
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    signapk_alias = properties.getProperty("signapk.alias")
+    signapk_pass1 = properties.getProperty("signapk.pass1")
+    signapk_store = properties.getProperty("signapk.store")
+    signapk_pass2 = properties.getProperty("signapk.pass2")
 
     app_id = 'com.github.jimcoven.demo.jcropimageview' // usually the namespace. Note it is not the same as package
     app_version_code = 1
@@ -18,7 +18,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.github.jimcoven:jcropimageview:0.21'
+    compile 'com.github.jimcoven:jcropimageview:0.20-SNAPSHOT'
 }
 
 /* .............................................................
@@ -29,14 +29,14 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
-//    signingConfigs {
-//        release {
-//            keyAlias signapk_alias
-//            keyPassword signapk_pass1
-//            storeFile file(signapk_store)
-//            storePassword signapk_pass2
-//        }
-//    }
+    signingConfigs {
+        release {
+            keyAlias signapk_alias
+            keyPassword signapk_pass1
+            storeFile file(signapk_store)
+            storePassword signapk_pass2
+        }
+    }
 
     defaultConfig {
         minSdkVersion 15
@@ -52,7 +52,7 @@ android {
         }
         release {
             applicationIdSuffix ".release"
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             minifyEnabled true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
