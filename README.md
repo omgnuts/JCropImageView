@@ -23,6 +23,10 @@ Similarly for FitHeight, it is effectively ALWAYS aligned TOP and BOTTOM
 
 THe configurations are more visible with FitBest, which will decide which bound to fit to. The default android scaleType=centerCrop is effectively 1 of the above configurations FitBest + CENTER
 
+![alt text][all_configs]
+
+[all_configs]: https://raw.githubusercontent.com/jimcoven/JCropImageView/master/art/configurations/all_configs.png "configs"
+
 ### How to use JCropImageView
 
 A) Simply include the repository and dependency in your build.gradle file
@@ -32,7 +36,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.jimcoven:jcropimageview:0.1'
+    compile 'com.github.jimcoven:jcropimageview:0.21'
 }
 ```
 
