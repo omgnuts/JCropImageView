@@ -21,13 +21,17 @@ package com.github.jimcoven.demo.jcropimageview;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.github.jimcoven.demo.DataPack;
+
 class Configuration implements Parcelable {
     final int cropType;
     final int cropAlign;
+    final int display;
 
-    Configuration(int type, int align) {
-        cropType = type;
-        cropAlign = align;
+    Configuration(int type, int align, int display) {
+        this.cropType = type;
+        this.cropAlign = align;
+        this.display = display;
     }
 
     String getConfigurationName() {
@@ -54,15 +58,64 @@ class Configuration implements Parcelable {
         return "NA";
     }
 
+    public DataPack.ImageItem[] getImageItems() {
+
+        // FIT_FILL && TOP|BOTTOM|CENTER
+        if (cropType == 1 && cropAlign < 3) {
+            return DataPack.getImages(new int[] {
+                DataPack.SHAPE_LONG,
+                DataPack.SHAPE_THIN,
+                DataPack.SHAPE_ICON,
+                DataPack.SHAPE_SQUARE
+            });
+        }
+
+        // FIT_FILL && LEFT|RIGHT|CENTER
+        if (cropType == 1 && cropAlign >= 3) {
+            return DataPack.getImages(new int[] {
+                    DataPack.SHAPE_FLAT,
+                    DataPack.SHAPE_WIDE
+            });
+        }
+
+        // FIT_WIDTH
+        if (cropType == 0) {
+            return DataPack.getImages(new int[] {
+                    DataPack.SHAPE_THIN,
+                    DataPack.SHAPE_LONG
+            });
+        }
+
+        // FIT_HEIGHT
+        if (cropType == 2) {
+            return DataPack.getImages(new int[]{
+                    DataPack.SHAPE_FLAT,
+                    DataPack.SHAPE_WIDE
+            });
+        }
+
+        // ANYTHING ELSE
+        return DataPack.getImages(new int[] {
+                DataPack.SHAPE_THIN,
+                DataPack.SHAPE_LONG,
+                DataPack.SHAPE_ICON,
+                DataPack.SHAPE_SQUARE,
+                DataPack.SHAPE_FLAT,
+                DataPack.SHAPE_WIDE
+        });
+    }
+
     Configuration(Parcel in) {
         cropType = in.readInt();
         cropAlign = in.readInt();
+        display = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(cropType);
         dest.writeInt(cropAlign);
+        dest.writeInt(display);
     }
 
     @Override

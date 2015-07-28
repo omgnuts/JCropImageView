@@ -18,17 +18,13 @@
 
 package com.github.jimcoven.demo;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-
 import com.github.jimcoven.demo.jcropimageview.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImagePack {
+public class DataPack {
 
     public static final int SHAPE_LONG = 0;
     public static final int SHAPE_WIDE = 1;
@@ -39,27 +35,39 @@ public class ImagePack {
 
     private static String getShapeName(int shape) {
         switch (shape) {
-            case SHAPE_LONG: return "Long";
-            case SHAPE_WIDE: return "Wide";
-            case SHAPE_ICON: return "Icon";
-            case SHAPE_SQUARE: return "Square";
-            case SHAPE_THIN: return "Thin";
-            case SHAPE_FLAT: return "Flat";
+            case SHAPE_LONG:    return "Long";
+            case SHAPE_WIDE:    return "Wide";
+            case SHAPE_ICON:    return "Icon";
+            case SHAPE_SQUARE:  return "Square";
+            case SHAPE_THIN:    return "Thin";
+            case SHAPE_FLAT:    return "Flat";
         }
         return "UNKNOWN";
     }
 
-    private static class ImageItem {
-        final int shape;
-        final int resId;
+    public static class ImageItem {
+        public final int shape;
+        public final int resId;
         private ImageItem(int shape, int resId) {
             this.shape = shape;
             this.resId = resId;
         }
 
         public String getShapeName() {
-            return ImagePack.getShapeName(shape) + " " + resId;
+            return DataPack.getShapeName(shape) + " " + resId;
         }
+    }
+
+    public static ImageItem[] getImages(int[] filters) {
+        List<ImageItem> filtered = new ArrayList<>();
+        for (int f : filters) {
+            for (ImageItem ii : images) {
+                if (ii.shape == f) {
+                    filtered.add(ii);
+                }
+            }
+        }
+        return filtered.toArray(new ImageItem[filtered.size()]);
     }
 
     private static final ImageItem[] images;
@@ -102,38 +110,8 @@ public class ImagePack {
         items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_4));
         items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_5));
 
-
         images = items.toArray(new ImageItem[items.size()]);
     }
 
-    private final Context context;
 
-    private ImagePack(Context context) {
-        this.context = context;
-    }
-
-    private static volatile ImagePack singleton;
-
-    public static synchronized ImagePack with(Context context) {
-        if  (singleton == null) {
-            singleton = new ImagePack(context);
-        }
-        return singleton;
-    }
-
-    public int getResourceId(int index) {
-        return images[index].resId;
-    }
-
-    public Drawable getDrawable(int index) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return context.getDrawable(getResourceId(index));
-        } else {
-            return context.getResources().getDrawable(getResourceId(index));
-        }
-    }
-
-    public int getCount() {
-        return images.length;
-    }
 }

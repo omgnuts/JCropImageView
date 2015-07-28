@@ -16,9 +16,9 @@ ext {
 
     // bare minimum params for uploading archive
     package_name = 'JCropImageView'
-    group_id = 'com.jattcode'
+    group_id = 'com.github.jimcoven'
     artifact_id = 'jcropimageview'
-    lib_version = '0.13-SNAPSHOT'
+    lib_version = '0.21'
     lib_version_code = 1
     git_url = 'https://github.com/jimcoven/JCropImageView.git'
     site_url = 'https://github.com/jimcoven/JCropImageView'

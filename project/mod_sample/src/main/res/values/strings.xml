@@ -4,5 +4,6 @@
     <string name="app_name">JCropImageView</string>
     <string name="jcrop_image_view">JCrop ImageView (%1$s)</string>
     <string name="default_image_view">Default ImageView (CENTER_CROP)</string>
+    <string name="github_link">View it on Github</string>
 
 </resources>

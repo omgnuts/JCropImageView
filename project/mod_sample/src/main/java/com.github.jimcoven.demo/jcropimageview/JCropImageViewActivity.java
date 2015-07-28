@@ -19,6 +19,8 @@
 package com.github.jimcoven.demo.jcropimageview;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -26,10 +28,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.jimcoven.demo.ImagePack;
+import com.github.jimcoven.demo.DataPack.ImageItem;
 import com.github.jimcoven.view.JCropImageView;
 
 import java.util.ArrayList;
@@ -41,12 +42,11 @@ public class JCropImageViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_jcropimage_view);
+        setContentView(R.layout.jcrop_activity);
 
         Configuration config = getIntent().getParcelableExtra("config");
 
-        ImagePageAdapter adapter = new ImagePageAdapter(this, config,
-                ImagePack.with(this));
+        ImagePageAdapter adapter = new ImagePageAdapter(this, config);
         ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
         pager.setAdapter(adapter);
 
@@ -58,15 +58,10 @@ public class JCropImageViewActivity extends AppCompatActivity {
         private class VHItem {
             JCropImageView jcropImage;
             TextView jcropTitle;
-            ImageView image;
-            TextView title;
-
 
             VHItem(View itemView) {
                 this.jcropImage = (JCropImageView) itemView.findViewById(R.id.jcropimage_view);
                 this.jcropTitle = (TextView) itemView.findViewById(R.id.jcrop_title);
-                this.image = (ImageView) itemView.findViewById(R.id.image_view);
-                this.title = (TextView) itemView.findViewById(R.id.title_view);
 
                 jcropImage.setCropType(config.cropType);
                 jcropImage.setCropAlign(config.cropAlign);
@@ -77,29 +72,29 @@ public class JCropImageViewActivity extends AppCompatActivity {
 
         private final LayoutInflater inflater;
 
-        private final Context context;
+        private final Resources resources;
 
-        private final ImagePack imagePack;
+        private final ImageItem[] images;
 
         private final Configuration config;
 
-        ImagePageAdapter(Context context, Configuration config, ImagePack imagePack) {
-            this.context = context;
+        ImagePageAdapter(Context context, Configuration config) {
+            this.resources = context.getResources();
             this.inflater = LayoutInflater.from(context);
             this.config = config;
-            this.imagePack = imagePack;
+            this.images = config.getImageItems();
         }
 
         @Override
         public int getCount() {
-            return imagePack.getCount();
+            return images.length;
         }
 
         @Override
         protected View getView(int position, View view, ViewGroup parent) {
             VHItem holder;
             if (view == null) {
-                view = inflater.inflate(R.layout.listitem_view, parent, false);
+                view = inflater.inflate(R.layout.jcropitem_view, parent, false);
                 holder = new VHItem(view);
             } else {
                 holder = (VHItem) view.getTag();
@@ -110,21 +105,14 @@ public class JCropImageViewActivity extends AppCompatActivity {
             return view;
         }
 
+        @SuppressWarnings("deprecation")
         private void bindView(final VHItem holder, int position) {
-            holder.jcropImage.setImageDrawable(imagePack.getDrawable(position));
-            String jconfig = context.getResources().getString(R.string.jcrop_image_view,
+            Drawable image = resources.getDrawable(images[position].resId);
+
+            holder.jcropImage.setImageDrawable(image);
+            String jconfig = resources.getString(R.string.jcrop_image_view,
                     config.getConfigurationName());
             holder.jcropTitle.setText(jconfig);
-
-            if (config.cropType == JCropImageView.CropType.FIT_FILL) {
-                holder.image.setImageDrawable(imagePack.getDrawable(position));
-                holder.title.setText(R.string.default_image_view);
-            } else {
-                // Default ImageView (CenterCrop) does not obey
-                // layout-weight = 1 where height = match_parent
-                holder.image.setVisibility(View.GONE);
-                holder.title.setVisibility(View.GONE);
-            }
         }
 
     }
