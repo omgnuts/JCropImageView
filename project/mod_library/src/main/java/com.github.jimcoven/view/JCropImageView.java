@@ -204,7 +204,7 @@ public class JCropImageView extends ImageView {
                     // if you want center crop shift it left by 50% aka 0.5f
                     dx = (int)( (msWidth - theoryw) * 0.5f + 0.5f ); // + 0.5f for rounding
                 } else if (mCropAlign == CropAlign.ALIGN_RIGHT) { //AlignTo.ALIGN_RIGHT
-                    // if you want bottom crop shift it up by 100% aka 1.0f
+                    // if you want right crop shift right up by 100% aka 1.0f
                     dx = (int)( (msWidth - theoryw) * 1.0f + 0.5f ); // + 0.5f for rounding
                 }
             }
