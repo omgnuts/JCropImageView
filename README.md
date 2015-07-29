@@ -6,7 +6,7 @@ One of the popular scaletype configurations used in Android is the "centerCrop".
 
 ### Download the sample app
 
-[![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.github.jimcoven.demo.jcropimageview.release)
+[![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://github.com/jimcoven/JCropImageView/raw/master/binaries/jcrop-0.22.apk) Pending upload to Playstore
 
 JCropImageView is a lightweight extension of the centercrop feature to provide additional control over how the images are displayed. For example in the screenshot below:
 
