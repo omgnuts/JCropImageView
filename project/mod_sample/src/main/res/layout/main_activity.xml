@@ -24,6 +24,15 @@
     android:orientation="vertical"
     >
 
+    <TextView
+        android:id="@+id/license"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/thin_border"
+        android:padding="6dp"
+        android:layout_margin="6dp"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

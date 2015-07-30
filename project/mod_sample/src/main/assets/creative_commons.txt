@@ -1,0 +1,3 @@
+Except where otherwise noted, images/content adapted for this application are licensed under a <b>Creative Commons Attribution 4.0 License</b>.
+To view a copy of this license, please visit <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
+This application serves no purpose other than for demonstration of an open source Android Library only.

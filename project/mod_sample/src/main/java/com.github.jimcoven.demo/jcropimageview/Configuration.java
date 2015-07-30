@@ -81,8 +81,8 @@ class Configuration implements Parcelable {
         // FIT_WIDTH
         if (cropType == 0) {
             return DataPack.getImages(new int[] {
-                    DataPack.SHAPE_THIN,
-                    DataPack.SHAPE_LONG
+                    DataPack.SHAPE_LONG,
+                    DataPack.SHAPE_THIN
             });
         }
 

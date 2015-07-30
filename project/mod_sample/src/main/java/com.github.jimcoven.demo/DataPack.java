@@ -75,40 +75,38 @@ public class DataPack {
     static {
         List<ImageItem> items = new ArrayList<>();
 
-        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_1));
-        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_2));
-        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_3));
-        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_4));
-        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_5));
+        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_11));
+        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_12));
+        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_13));
+        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_14));
+        items.add(new ImageItem(SHAPE_THIN, R.mipmap.thin_15));
 
-        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_1));
-        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_2));
-        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_3));
-        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_4));
+        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_11));
+        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_12));
+        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_13));
+        items.add(new ImageItem(SHAPE_FLAT, R.mipmap.flat_14));
 
-        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_1));
-        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_2));
-        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_3));
-        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_4));
+        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_11));
+        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_12));
+        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_13));
+        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_14));
+        items.add(new ImageItem(SHAPE_LONG, R.mipmap.long_15));
 
-        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_1));
-        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_2));
-        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_3));
-        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_4));
+        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_11));
+        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_12));
+        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_13));
+        items.add(new ImageItem(SHAPE_WIDE, R.mipmap.wide_14));
 
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_1));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_2));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_3));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_4));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_5));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_6));
-        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_7));
+        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_11));
+        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_12));
+        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_13));
+        items.add(new ImageItem(SHAPE_ICON, R.mipmap.icon_14));
 
-        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_1));
-        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_2));
-        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_3));
-        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_4));
-        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_5));
+        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_11));
+        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_12));
+        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_13));
+        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_14));
+        items.add(new ImageItem(SHAPE_SQUARE, R.mipmap.square_15));
 
         images = items.toArray(new ImageItem[items.size()]);
     }

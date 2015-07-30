@@ -26,6 +26,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,10 +38,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final Configuration[] configs;
 
@@ -79,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new ConfigAdapter(this, configs));
+
+        setLicenseBox();
+
     }
 
 
@@ -169,5 +181,38 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setLicenseBox() {
+
+        StringBuilder sb = null;
+
+        InputStream stream = null;
+        BufferedReader br = null;
+        try {
+            String line;
+
+            stream = getAssets().open("creative_commons.txt");
+            br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) br.close();
+            } catch (IOException e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
+        }
+
+        if (sb != null) { // for some reason
+            TextView license = (TextView) findViewById(R.id.license);
+            license.setText(Html.fromHtml(sb.toString()));
+            license.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 }

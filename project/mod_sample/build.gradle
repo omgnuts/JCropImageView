@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 ext {
     app_id = 'com.github.jimcoven.demo.jcropimageview' // usually the namespace. Note it is not the same as package
-    app_version_code = 1
-    app_version = '0.22'
+    app_version_code = 8
+    app_version = '0.23'
 }
 
 dependencies {
