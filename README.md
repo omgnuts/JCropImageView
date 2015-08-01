@@ -1,9 +1,8 @@
-[![Android Gems](http://www.android-gems.com/badge/jimcoven/JCropImageView.svg?branch=master)](http://www.android-gems.com/lib/jimcoven/JCropImageView)
-
 ### Overview of JCropImageView
 
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-JCropImageView-green.svg?style=flat)](https://android-arsenal.com/details/1/2208)
+[![Android Gems](http://www.android-gems.com/badge/jimcoven/JCropImageView.svg?branch=master)](http://www.android-gems.com/lib/jimcoven/JCropImageView)
 
 One of the popular scaletype configurations used in Android is the "centerCrop". However, it is limited to just center cropping. This usually crops off the faces of people from images that have an aspect ratio height > width. 
 
