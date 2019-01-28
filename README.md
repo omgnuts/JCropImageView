@@ -37,14 +37,14 @@ THe configurations are more visible with FitBest, which will decide which bound 
 
 ### How to use JCropImageView
 
-A) Simply include the repository and dependency in your build.gradle file
+A) Simply include the repository and dependency in your app's build.gradle file
 
 ```
 repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'com.github.jimcoven:jcropimageview:0.22'
+    implementation 'com.github.jimcoven:jcropimageview:0.22'
 }
 ```
 
